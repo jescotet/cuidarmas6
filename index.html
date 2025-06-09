@@ -27,7 +27,7 @@
             max-width: 800px;
             margin-left: auto;
             margin-right: auto;
-            height: 400px;
+            height: 300px; /* Adjusted for mobile first */
         }
         @media (min-width: 768px) {
             .chart-container {
@@ -52,17 +52,17 @@
         .lds-ring {
             display: inline-block;
             position: relative;
-            width: 80px;
-            height: 80px;
+            width: 64px; /* smaller for mobile */
+            height: 64px;
         }
         .lds-ring div {
             box-sizing: border-box;
             display: block;
             position: absolute;
-            width: 64px;
-            height: 64px;
-            margin: 8px;
-            border: 8px solid #0284c7;
+            width: 51px;
+            height: 51px;
+            margin: 6px;
+            border: 6px solid #0284c7;
             border-radius: 50%;
             animation: lds-ring 1.2s cubic-bezier(0.5, 0, 0.5, 1) infinite;
             border-color: #0284c7 transparent transparent transparent;
@@ -94,6 +94,27 @@
                         <a href="#futuro" class="text-slate-600 hover:bg-sky-50 hover:text-sky-600 px-3 py-2 rounded-md text-sm font-medium">Futuro</a>
                     </div>
                 </div>
+                <div class="md:hidden">
+                    <button id="mobile-menu-button" class="inline-flex items-center justify-center p-2 rounded-md text-slate-500 hover:text-slate-700 hover:bg-slate-100 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-sky-500">
+                        <span class="sr-only">Abrir menú principal</span>
+                        <svg class="h-6 w-6" id="menu-closed-icon" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7" />
+                        </svg>
+                        <svg class="h-6 w-6 hidden" id="menu-opened-icon" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
+                           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                        </svg>
+                    </button>
+                </div>
+            </div>
+        </div>
+        <div id="mobile-menu" class="md:hidden hidden">
+            <div class="px-2 pt-2 pb-3 space-y-1 sm:px-3">
+                <a href="#proyecto" class="text-slate-600 hover:bg-sky-50 hover:text-sky-600 block px-3 py-2 rounded-md text-base font-medium">El Proyecto</a>
+                <a href="#solucion" class="text-slate-600 hover:bg-sky-50 hover:text-sky-600 block px-3 py-2 rounded-md text-base font-medium">Solución</a>
+                <a href="#demo-ia" class="text-slate-600 hover:bg-sky-50 hover:text-sky-600 block px-3 py-2 rounded-md text-base font-medium">Demo IA ✨</a>
+                <a href="#roadmap" class="text-slate-600 hover:bg-sky-50 hover:text-sky-600 block px-3 py-2 rounded-md text-base font-medium">Hoja de Ruta</a>
+                <a href="#costes" class="text-slate-600 hover:bg-sky-50 hover:text-sky-600 block px-3 py-2 rounded-md text-base font-medium">Costes</a>
+                <a href="#futuro" class="text-slate-600 hover:bg-sky-50 hover:text-sky-600 block px-3 py-2 rounded-md text-base font-medium">Futuro</a>
             </div>
         </div>
     </nav>
@@ -101,34 +122,28 @@
     <main class="container mx-auto px-4 sm:px-6 lg:px-8 py-8 md:py-12">
 
         <header class="text-center mb-16">
-            <h1 class="text-4xl md:text-5xl font-extrabold text-slate-800 leading-tight">Propuesta de Desarrollo para <span class="text-sky-600">Cuidar+</span></h1>
-            <p class="mt-4 max-w-3xl mx-auto text-lg text-slate-500">Una solución innovadora para conectar generaciones, aliviar la soledad y ofrecer tranquilidad a las familias a través de la inteligencia artificial conversacional.</p>
+            <h1 class="text-3xl sm:text-4xl md:text-5xl font-extrabold text-slate-800 leading-tight">Propuesta de Desarrollo para <span class="text-sky-600">Cuidar+</span></h1>
+            <p class="mt-4 max-w-3xl mx-auto text-base md:text-lg text-slate-500">Una solución innovadora para conectar generaciones, aliviar la soledad y ofrecer tranquilidad a las familias.</p>
         </header>
 
         <section id="proyecto" class="mb-20 scroll-mt-20">
             <div class="text-center mb-12">
                 <h2 class="text-3xl font-bold text-slate-800">El Proyecto: Visión y Objetivo</h2>
-                <p class="mt-2 text-md text-slate-500 max-w-2xl mx-auto">Esta sección detalla el propósito fundamental de Cuidar+, identificando el problema que resuelve y las personas a las que se dirige. Es el "porqué" de nuestra misión.</p>
+                <p class="mt-2 text-md text-slate-500 max-w-2xl mx-auto">Esta sección detalla el propósito fundamental de Cuidar+, identificando el problema que resuelve y las personas a las que se dirige.</p>
             </div>
-            <div class="bg-white p-8 rounded-2xl shadow-lg grid md:grid-cols-2 gap-8 items-center">
+            <div class="bg-white p-6 md:p-8 rounded-2xl shadow-lg grid md:grid-cols-2 gap-8 items-center">
                 <div class="prose max-w-none">
                     <h3 class="text-xl font-semibold text-sky-700">Objetivo Principal</h3>
-                    <p>Diseñar e implementar un <strong>asistente conversacional por voz natural en WhatsApp</strong>, dirigido a personas mayores. El sistema se complementa con un Portal Web/WebApp que permite a los hijos, familiares o cuidadores personalizar la experiencia, monitorizar interacciones, configurar alertas y consultar historiales.</p>
-                    <h3 class="mt-6 text-xl font-semibold text-sky-700">Perfiles de Usuario (Buyer Persona)</h3>
+                    <p>Diseñar un <strong>asistente conversacional por voz en WhatsApp</strong> para personas mayores, con un Portal Web para que sus cuidadores puedan personalizar la experiencia y monitorizar las interacciones.</p>
+                    <h3 class="mt-6 text-xl font-semibold text-sky-700">Perfiles de Usuario</h3>
                     <ul class="list-disc pl-5 space-y-2">
-                        <li><strong>Primario:</strong> El hijo, familiar o cuidador. Es el usuario del Portal Web, responsable de la configuración y supervisión.</li>
-                        <li><strong>Secundario:</strong> La persona mayor. Es el usuario final que interactúa con el asistente por voz a través de audios de WhatsApp.</li>
+                        <li><strong>Primario:</strong> El familiar o cuidador que usa el Portal Web.</li>
+                        <li><strong>Secundario:</strong> La persona mayor que usa WhatsApp.</li>
                     </ul>
                 </div>
                 <div class="bg-slate-100 p-6 rounded-xl border border-slate-200">
                     <h4 class="font-bold text-center text-slate-800 mb-4">Customer Journey</h4>
-                    <ol class="relative border-l border-slate-300">
-                        <li class="mb-6 ml-4"><div class="absolute w-3 h-3 bg-sky-500 rounded-full mt-1.5 -left-1.5 border border-white"></div><h5 class="font-semibold">1. Registro</h5><p class="text-sm text-slate-600">El cuidador se registra en la WebApp.</p></li>
-                        <li class="mb-6 ml-4"><div class="absolute w-3 h-3 bg-sky-500 rounded-full mt-1.5 -left-1.5 border border-white"></div><h5 class="font-semibold">2. Creación de Perfil</h5><p class="text-sm text-slate-600">Crea un perfil para la persona mayor.</p></li>
-                        <li class="mb-6 ml-4"><div class="absolute w-3 h-3 bg-sky-500 rounded-full mt-1.5 -left-1.5 border border-white"></div><h5 class="font-semibold">3. Personalización</h5><p class="text-sm text-slate-600">Define el tono y temas de conversación.</p></li>
-                        <li class="mb-6 ml-4"><div class="absolute w-3 h-3 bg-sky-500 rounded-full mt-1.5 -left-1.5 border border-white"></div><h5 class="font-semibold">4. Activación</h5><p class="text-sm text-slate-600">Valida el WhatsApp y el asistente se activa.</p></li>
-                        <li class="ml-4"><div class="absolute w-3 h-3 bg-sky-500 rounded-full mt-1.5 -left-1.5 border border-white"></div><h5 class="font-semibold">5. Monitorización</h5><p class="text-sm text-slate-600">El cuidador supervisa la actividad y alertas.</p></li>
-                    </ol>
+                    <ol class="relative border-l border-slate-300"><li class="mb-6 ml-4"><div class="absolute w-3 h-3 bg-sky-500 rounded-full mt-1.5 -left-1.5 border border-white"></div><h5 class="font-semibold">1. Registro</h5><p class="text-sm text-slate-600">El cuidador se registra en la WebApp.</p></li><li class="mb-6 ml-4"><div class="absolute w-3 h-3 bg-sky-500 rounded-full mt-1.5 -left-1.5 border border-white"></div><h5 class="font-semibold">2. Creación de Perfil</h5><p class="text-sm text-slate-600">Crea un perfil para la persona mayor.</p></li><li class="mb-6 ml-4"><div class="absolute w-3 h-3 bg-sky-500 rounded-full mt-1.5 -left-1.5 border border-white"></div><h5 class="font-semibold">3. Personalización</h5><p class="text-sm text-slate-600">Define el tono y temas de conversación.</p></li><li class="mb-6 ml-4"><div class="absolute w-3 h-3 bg-sky-500 rounded-full mt-1.5 -left-1.5 border border-white"></div><h5 class="font-semibold">4. Activación</h5><p class="text-sm text-slate-600">Valida el WhatsApp y el asistente se activa.</p></li><li class="ml-4"><div class="absolute w-3 h-3 bg-sky-500 rounded-full mt-1.5 -left-1.5 border border-white"></div><h5 class="font-semibold">5. Monitorización</h5><p class="text-sm text-slate-600">El cuidador supervisa la actividad y alertas.</p></li></ol>
                 </div>
             </div>
         </section>
@@ -136,11 +151,22 @@
         <section id="solucion" class="mb-20 scroll-mt-20">
             <div class="text-center mb-12">
                 <h2 class="text-3xl font-bold text-slate-800">Solución Técnica</h2>
-                <p class="mt-2 text-md text-slate-500 max-w-2xl mx-auto">Aquí exploramos el "cómo": la arquitectura del sistema y las tecnologías seleccionadas para construir Cuidar+. Cada componente ha sido elegido por su robustez, escalabilidad y eficiencia.</p>
+                <p class="mt-2 text-md text-slate-500 max-w-2xl mx-auto">Aquí exploramos el "cómo": la arquitectura y tecnologías seleccionadas para construir Cuidar+.</p>
             </div>
-            <div class="bg-white p-8 rounded-2xl shadow-lg">
-                <h3 class="text-xl font-bold text-center text-slate-800 mb-8">Diagrama de Arquitectura Interactivo</h3>
-                <div class="relative max-w-4xl mx-auto p-4"><div class="grid grid-cols-1 md:grid-cols-3 gap-y-16 gap-x-8 items-center text-center"><div class="flow-line vertical" style="top: 80px; height: calc(50% - 80px);"></div><div class="flow-line horizontal" style="left: calc(16.66% + 2rem); width: calc(66.66% - 4rem);"></div><div class="flow-line vertical" style="bottom: 80px; height: calc(50% - 80px); left: 16.66%;"></div><div class="flow-line vertical" style="bottom: 80px; height: calc(50% - 80px); left: 83.33%;"></div><div class="flow-line vertical" style="top: 80px; height: 100px; left: 83.33%;"></div><div class="flow-line horizontal" style="left: calc(50%); width: calc(33.33% + 2rem); top: 180px;"></div><div class="md:col-start-2 group relative cursor-pointer p-4 bg-sky-50 border border-sky-200 rounded-lg shadow-sm transition hover:scale-105"><p class="font-bold">Usuario: Persona Mayor</p><div class="absolute bottom-full mb-2 w-60 left-1/2 -translate-x-1/2 p-2 text-sm bg-slate-800 text-white rounded-md opacity-0 group-hover:opacity-100 transition-opacity">Interactúa únicamente por audios de WhatsApp.</div></div><div class="md:col-start-2 group relative cursor-pointer p-4 bg-sky-50 border border-sky-200 rounded-lg shadow-sm transition hover:scale-105"><p class="font-bold">API de WhatsApp</p><p class="text-xs text-slate-500">(Gupshup)</p><div class="absolute bottom-full mb-2 w-60 left-1/2 -translate-x-1/2 p-2 text-sm bg-slate-800 text-white rounded-md opacity-0 group-hover:opacity-100 transition-opacity">Recibe audios y envía respuestas. Conecta con el cuidador.</div></div><div class="md:col-start-3 row-start-1 md:row-start-2 group relative cursor-pointer p-4 bg-green-50 border border-green-200 rounded-lg shadow-sm transition hover:scale-105"><p class="font-bold">WebApp Cuidador</p><p class="text-xs text-slate-500">(React)</p><div class="absolute bottom-full mb-2 w-60 left-1/2 -translate-x-1/2 p-2 text-sm bg-slate-800 text-white rounded-md opacity-0 group-hover:opacity-100 transition-opacity">Portal para configurar y monitorizar.</div></div><div class="md:col-start-1 row-start-3 group relative cursor-pointer p-4 bg-purple-50 border border-purple-200 rounded-lg shadow-sm transition hover:scale-105"><p class="font-bold">Speech-to-Text</p><p class="text-xs text-slate-500">(Whisper API)</p><div class="absolute top-full mt-2 w-60 left-1/2 -translate-x-1/2 p-2 text-sm bg-slate-800 text-white rounded-md opacity-0 group-hover:opacity-100 transition-opacity">Convierte el audio del usuario a texto.</div></div><div class="md:col-start-3 row-start-3 group relative cursor-pointer p-4 bg-green-50 border border-green-200 rounded-lg shadow-sm transition hover:scale-105"><p class="font-bold">Backend DB</p><p class="text-xs text-slate-500">(PostgreSQL/Firestore)</p><div class="absolute top-full mt-2 w-60 left-1/2 -translate-x-1/2 p-2 text-sm bg-slate-800 text-white rounded-md opacity-0 group-hover:opacity-100 transition-opacity">Almacena logs, perfiles, y alertas.</div></div><div class="md:col-start-1 row-start-4 group relative cursor-pointer p-4 bg-purple-50 border border-purple-200 rounded-lg shadow-sm transition hover:scale-105"><p class="font-bold">LLM: GPT-4o API</p><p class="text-xs text-slate-500">(OpenAI)</p><div class="absolute top-full mt-2 w-60 left-1/2 -translate-x-1/2 p-2 text-sm bg-slate-800 text-white rounded-md opacity-0 group-hover:opacity-100 transition-opacity">Genera la respuesta conversacional.</div></div><div class="md:col-start-1 row-start-5 group relative cursor-pointer p-4 bg-purple-50 border border-purple-200 rounded-lg shadow-sm transition hover:scale-105"><p class="font-bold">Text-to-Speech</p><p class="text-xs text-slate-500">(Play.ht/Google)</p><div class="absolute top-full mt-2 w-60 left-1/2 -translate-x-1/2 p-2 text-sm bg-slate-800 text-white rounded-md opacity-0 group-hover:opacity-100 transition-opacity">Convierte el texto de la IA a un audio natural.</div></div></div></div>
+            <div class="bg-white p-6 md:p-8 rounded-2xl shadow-lg">
+                <h3 class="text-xl font-bold text-center text-slate-800 mb-8">Diagrama de Arquitectura</h3>
+                <div class="flex flex-col md:hidden space-y-4 text-center">
+                    <div class="p-4 bg-sky-50 border border-sky-200 rounded-lg shadow-sm"><p class="font-bold">Usuario: Persona Mayor</p></div>
+                    <div class="self-center">↓</div>
+                    <div class="p-4 bg-sky-50 border border-sky-200 rounded-lg shadow-sm"><p class="font-bold">API de WhatsApp</p></div>
+                    <div class="self-center">↓</div>
+                    <div class="p-4 bg-green-50 border border-green-200 rounded-lg shadow-sm"><p class="font-bold">WebApp Cuidador</p></div>
+                    <div class="self-center">↓</div>
+                    <div class="p-4 bg-purple-50 border border-purple-200 rounded-lg shadow-sm"><p class="font-bold">IA (STT → LLM → TTS)</p></div>
+                    <div class="self-center">↓</div>
+                     <div class="p-4 bg-green-50 border border-green-200 rounded-lg shadow-sm"><p class="font-bold">Backend DB</p></div>
+                </div>
+                <div class="relative max-w-4xl mx-auto p-4 hidden md:block"><div class="grid grid-cols-1 md:grid-cols-3 gap-y-16 gap-x-8 items-center text-center"><div class="flow-line vertical" style="top: 80px; height: calc(50% - 80px);"></div><div class="flow-line horizontal" style="left: calc(16.66% + 2rem); width: calc(66.66% - 4rem);"></div><div class="flow-line vertical" style="bottom: 80px; height: calc(50% - 80px); left: 16.66%;"></div><div class="flow-line vertical" style="bottom: 80px; height: calc(50% - 80px); left: 83.33%;"></div><div class="flow-line vertical" style="top: 80px; height: 100px; left: 83.33%;"></div><div class="flow-line horizontal" style="left: calc(50%); width: calc(33.33% + 2rem); top: 180px;"></div><div class="md:col-start-2 group relative cursor-pointer p-4 bg-sky-50 border border-sky-200 rounded-lg shadow-sm transition hover:scale-105"><p class="font-bold">Usuario: Persona Mayor</p><div class="absolute bottom-full mb-2 w-60 left-1/2 -translate-x-1/2 p-2 text-sm bg-slate-800 text-white rounded-md opacity-0 group-hover:opacity-100 transition-opacity">Interactúa únicamente por audios de WhatsApp.</div></div><div class="md:col-start-2 group relative cursor-pointer p-4 bg-sky-50 border border-sky-200 rounded-lg shadow-sm transition hover:scale-105"><p class="font-bold">API de WhatsApp</p><p class="text-xs text-slate-500">(Gupshup)</p><div class="absolute bottom-full mb-2 w-60 left-1/2 -translate-x-1/2 p-2 text-sm bg-slate-800 text-white rounded-md opacity-0 group-hover:opacity-100 transition-opacity">Recibe audios y envía respuestas. Conecta con el cuidador.</div></div><div class="md:col-start-3 row-start-1 md:row-start-2 group relative cursor-pointer p-4 bg-green-50 border border-green-200 rounded-lg shadow-sm transition hover:scale-105"><p class="font-bold">WebApp Cuidador</p><p class="text-xs text-slate-500">(React)</p><div class="absolute bottom-full mb-2 w-60 left-1/2 -translate-x-1/2 p-2 text-sm bg-slate-800 text-white rounded-md opacity-0 group-hover:opacity-100 transition-opacity">Portal para configurar y monitorizar.</div></div><div class="md:col-start-1 row-start-3 group relative cursor-pointer p-4 bg-purple-50 border border-purple-200 rounded-lg shadow-sm transition hover:scale-105"><p class="font-bold">Speech-to-Text</p><p class="text-xs text-slate-500">(Whisper API)</p><div class="absolute top-full mt-2 w-60 left-1/2 -translate-x-1/2 p-2 text-sm bg-slate-800 text-white rounded-md opacity-0 group-hover:opacity-100 transition-opacity">Convierte el audio del usuario a texto.</div></div><div class="md:col-start-3 row-start-3 group relative cursor-pointer p-4 bg-green-50 border border-green-200 rounded-lg shadow-sm transition hover:scale-105"><p class="font-bold">Backend DB</p><p class="text-xs text-slate-500">(PostgreSQL/Firestore)</p><div class="absolute top-full mt-2 w-60 left-1/2 -translate-x-1/2 p-2 text-sm bg-slate-800 text-white rounded-md opacity-0 group-hover:opacity-100 transition-opacity">Almacena logs, perfiles, y alertas.</div></div><div class="md:col-start-1 row-start-4 group relative cursor-pointer p-4 bg-purple-50 border border-purple-200 rounded-lg shadow-sm transition hover:scale-105"><p class="font-bold">LLM: GPT-4o API</p><p class="text-xs text-slate-500">(OpenAI)</p><div class="absolute top-full mt-2 w-60 left-1/2 -translate-x-1/2 p-2 text-sm bg-slate-800 text-white rounded-md opacity-0 group-hover:opacity-100 transition-opacity">Genera la respuesta conversacional.</div></div><div class="md:col-start-1 row-start-5 group relative cursor-pointer p-4 bg-purple-50 border border-purple-200 rounded-lg shadow-sm transition hover:scale-105"><p class="font-bold">Text-to-Speech</p><p class="text-xs text-slate-500">(Play.ht/Google)</p><div class="absolute top-full mt-2 w-60 left-1/2 -translate-x-1/2 p-2 text-sm bg-slate-800 text-white rounded-md opacity-0 group-hover:opacity-100 transition-opacity">Convierte el texto de la IA a un audio natural.</div></div></div></div>
                 <h3 class="text-xl font-bold text-center text-slate-800 mt-16 mb-8">Stack Tecnológico</h3>
                 <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"><div class="bg-slate-50 p-6 rounded-xl border border-slate-200"><h4 class="font-bold text-sky-700">WebApp (Frontend)</h4><p class="font-semibold text-slate-800">React (con Vite)</p><p class="text-sm text-slate-600 mt-1">Ideal para crear interfaces interactivas y dinámicas.</p></div><div class="bg-slate-50 p-6 rounded-xl border border-slate-200"><h4 class="font-bold text-sky-700">Backend (Middleware)</h4><p class="font-semibold text-slate-800">Node.js (con Express)</p><p class="text-sm text-slate-600 mt-1">Perfecto para orquestar llamadas a APIs de forma asíncrona.</p></div><div class="bg-slate-50 p-6 rounded-xl border border-slate-200"><h4 class="font-bold text-sky-700">Base de Datos</h4><p class="font-semibold text-slate-800">Firestore (Firebase)</p><p class="text-sm text-slate-600 mt-1">NoSQL, escalable y en tiempo real para monitorización en vivo.</p></div><div class="bg-slate-50 p-6 rounded-xl border border-slate-200"><h4 class="font-bold text-sky-700">Speech-to-Text</h4><p class="font-semibold text-slate-800">Whisper API (OpenAI)</p><p class="text-sm text-slate-600 mt-1">Transcripciones de alta precisión para un habla natural.</p></div><div class="bg-slate-50 p-6 rounded-xl border border-slate-200"><h4 class="font-bold text-sky-700">Modelo de Lenguaje (LLM)</h4><p class="font-semibold text-slate-800">GPT-4o (OpenAI)</p><p class="text-sm text-slate-600 mt-1">Capacidad multimodal y de conversación natural.</p></div><div class="bg-slate-50 p-6 rounded-xl border border-slate-200"><h4 class="font-bold text-sky-700">Text-to-Speech</h4><p class="font-semibold text-slate-800">ElevenLabs / PlayHT</p><p class="text-sm text-slate-600 mt-1">Voces hiperrealistas, cálidas y con entonación natural.</p></div></div>
             </div>
@@ -149,62 +175,59 @@
         <section id="demo-ia" class="mb-20 scroll-mt-20">
             <div class="text-center mb-12">
                 <h2 class="text-3xl font-bold text-slate-800">Demo Interactiva con IA ✨</h2>
-                <p class="mt-2 text-md text-slate-500 max-w-2xl mx-auto">Pruebe el poder de la personalización. Describa la personalidad que desea para el asistente y vea cómo la API de Gemini crea un "System Prompt" a medida al instante.</p>
+                <p class="mt-2 text-md text-slate-500 max-w-2xl mx-auto">Pruebe el poder de la personalización. Describa la personalidad del asistente y vea cómo Gemini crea un "System Prompt" a medida.</p>
             </div>
-            <div class="bg-white p-8 rounded-2xl shadow-lg max-w-4xl mx-auto">
-                <div class="grid md:grid-cols-2 gap-8">
-                    <div>
-                        <label for="personality-input" class="block text-lg font-semibold text-slate-800 mb-2">1. Describa la personalidad deseada</label>
-                        <textarea id="personality-input" rows="6" class="w-full p-3 border border-slate-300 rounded-lg focus:ring-2 focus:ring-sky-500 focus:border-sky-500 transition" placeholder="Ej: Quiero un asistente que sea como un abuelo sabio y cariñoso. Debe ser paciente, usar refranes y hablar de historia y música clásica."></textarea>
-                        <button id="generate-prompt-btn" class="mt-4 w-full bg-sky-600 text-white font-bold py-3 px-4 rounded-lg hover:bg-sky-700 transition-colors duration-300 flex items-center justify-center space-x-2">
-                            <span>✨ Generar Prompt con IA</span>
-                        </button>
+            <div class="bg-white p-6 md:p-8 rounded-2xl shadow-lg max-w-4xl mx-auto">
+                <div class="flex flex-col md:grid md:grid-cols-2 gap-8">
+                    <div class="flex flex-col">
+                        <label for="personality-input" class="block text-lg font-semibold text-slate-800 mb-2">1. Describa la personalidad</label>
+                        <textarea id="personality-input" rows="6" class="w-full p-3 border border-slate-300 rounded-lg focus:ring-2 focus:ring-sky-500 focus:border-sky-500 transition flex-grow" placeholder="Ej: Quiero un asistente que sea como un abuelo sabio y cariñoso. Debe ser paciente, usar refranes y hablar de historia y música clásica."></textarea>
                     </div>
-                    <div>
+                    <div class="flex flex-col">
                         <label for="prompt-output" class="block text-lg font-semibold text-slate-800 mb-2">2. System Prompt Generado</label>
-                        <div id="prompt-output-container" class="w-full h-full min-h-[160px] p-4 bg-slate-100 border border-slate-200 rounded-lg relative">
-                            <div id="loader" class="hidden absolute inset-0 bg-white/70 flex items-center justify-center">
-                                <div class="lds-ring"><div></div><div></div><div></div><div></div></div>
-                            </div>
+                        <div id="prompt-output-container" class="w-full h-full min-h-[180px] p-4 bg-slate-100 border border-slate-200 rounded-lg relative flex-grow">
+                            <div id="loader" class="hidden absolute inset-0 bg-white/70 flex items-center justify-center"><div class="lds-ring"><div></div><div></div><div></div><div></div></div></div>
                             <pre id="prompt-output" class="whitespace-pre-wrap text-sm text-slate-700 font-mono"></pre>
-                             <div id="placeholder-text" class="text-slate-400">El prompt generado por la IA aparecerá aquí...</div>
+                            <div id="placeholder-text" class="text-slate-400">El prompt generado por la IA aparecerá aquí...</div>
                         </div>
                     </div>
                 </div>
+                <button id="generate-prompt-btn" class="mt-6 w-full bg-sky-600 text-white font-bold py-3 px-4 rounded-lg hover:bg-sky-700 transition-colors duration-300 flex items-center justify-center space-x-2">
+                    <span>✨ Generar Prompt con IA</span>
+                </button>
             </div>
         </section>
-
 
         <section id="roadmap" class="mb-20 scroll-mt-20">
             <div class="text-center mb-12">
                 <h2 class="text-3xl font-bold text-slate-800">Hoja de Ruta del MVP</h2>
-                <p class="mt-2 text-md text-slate-500 max-w-2xl mx-auto">Presentamos un plan de desarrollo de 10-12 semanas, desglosado en fases claras con hitos específicos. Este es el "cuándo" de nuestro proyecto.</p>
+                <p class="mt-2 text-md text-slate-500 max-w-2xl mx-auto">Presentamos un plan de desarrollo de 10-12 semanas, desglosado en fases claras con hitos específicos.</p>
             </div>
-            <div class="bg-white p-8 rounded-2xl shadow-lg"><div class="max-w-3xl mx-auto"><div class="relative"><div class="absolute left-4 top-0 h-full w-0.5 bg-slate-200" aria-hidden="true"></div><div class="relative pl-8 space-y-8"><div class="flex items-start"><div class="flex-shrink-0 w-8 h-8 bg-sky-500 rounded-full flex items-center justify-center text-white font-bold ring-8 ring-white">1</div><div class="ml-4"><h4 class="font-bold text-slate-800">Semanas 1-3: Setup y Backend Core</h4><p class="text-slate-600">Configuración de APIs (WhatsApp) y desarrollo del middleware en Node.js para recibir y procesar peticiones.</p></div></div><div class="flex items-start"><div class="flex-shrink-0 w-8 h-8 bg-sky-500 rounded-full flex items-center justify-center text-white font-bold ring-8 ring-white">2</div><div class="ml-4"><h4 class="font-bold text-slate-800">Semanas 4-5: Integración IA</h4><p class="text-slate-600">Integración de las APIs de STT, LLM y TTS. Creación del flujo completo: Audio In → Texto → Respuesta IA → Audio Out.</p></div></div><div class="flex items-start"><div class="flex-shrink-0 w-8 h-8 bg-sky-500 rounded-full flex items-center justify-center text-white font-bold ring-8 ring-white">3</div><div class="ml-4"><h4 class="font-bold text-slate-800">Semanas 6-9: Desarrollo WebApp Portal</h4><p class="text-slate-600">Creación de todas las pantallas en React (Dashboard, Perfil, Configuración, Historial, Alertas) y conexión a la base de datos.</p></div></div><div class="flex items-start"><div class="flex-shrink-0 w-8 h-8 bg-sky-500 rounded-full flex items-center justify-center text-white font-bold ring-8 ring-white">4</div><div class="ml-4"><h4 class="font-bold text-slate-800">Semanas 10-12: Integración Final y Pruebas</h4><p class="text-slate-600">Conexión completa, implementación de webhooks, QA testing exhaustivo y ajustes finales basados en el feedback.</p></div></div></div></div></div></div>
+            <div class="bg-white p-6 md:p-8 rounded-2xl shadow-lg"><div class="max-w-3xl mx-auto"><div class="relative"><div class="absolute left-4 top-0 h-full w-0.5 bg-slate-200" aria-hidden="true"></div><div class="relative pl-8 space-y-8"><div class="flex items-start"><div class="flex-shrink-0 w-8 h-8 bg-sky-500 rounded-full flex items-center justify-center text-white font-bold ring-8 ring-white">1</div><div class="ml-4"><h4 class="font-bold text-slate-800">Semanas 1-3: Setup y Backend Core</h4><p class="text-slate-600">Configuración de APIs (WhatsApp) y desarrollo del middleware en Node.js.</p></div></div><div class="flex items-start"><div class="flex-shrink-0 w-8 h-8 bg-sky-500 rounded-full flex items-center justify-center text-white font-bold ring-8 ring-white">2</div><div class="ml-4"><h4 class="font-bold text-slate-800">Semanas 4-5: Integración IA</h4><p class="text-slate-600">Integración de las APIs de STT, LLM y TTS. Creación del flujo completo de audio.</p></div></div><div class="flex items-start"><div class="flex-shrink-0 w-8 h-8 bg-sky-500 rounded-full flex items-center justify-center text-white font-bold ring-8 ring-white">3</div><div class="ml-4"><h4 class="font-bold text-slate-800">Semanas 6-9: Desarrollo WebApp</h4><p class="text-slate-600">Creación de todas las pantallas en React y conexión a la base de datos.</p></div></div><div class="flex items-start"><div class="flex-shrink-0 w-8 h-8 bg-sky-500 rounded-full flex items-center justify-center text-white font-bold ring-8 ring-white">4</div><div class="ml-4"><h4 class="font-bold text-slate-800">Semanas 10-12: Pruebas y Ajustes</h4><p class="text-slate-600">QA testing exhaustivo y ajustes finales basados en el feedback.</p></div></div></div></div></div></div>
         </section>
 
         <section id="costes" class="mb-20 scroll-mt-20">
             <div class="text-center mb-12">
                 <h2 class="text-3xl font-bold text-slate-800">Estimación de Costes Mensuales</h2>
-                <p class="mt-2 text-md text-slate-500 max-w-2xl mx-auto">Esta sección ofrece una visión transparente del "cuánto", desglosando los costes operativos mensuales estimados para la fase piloto del proyecto.</p>
+                <p class="mt-2 text-md text-slate-500 max-w-2xl mx-auto">Una visión transparente de los costes operativos mensuales estimados para la fase piloto.</p>
             </div>
-             <div class="bg-white p-8 rounded-2xl shadow-lg">
+             <div class="bg-white p-6 md:p-8 rounded-2xl shadow-lg">
                 <div class="chart-container">
                     <canvas id="costsChart"></canvas>
                 </div>
-                <p class="text-center mt-4 text-sm text-slate-500">Costes estimados para la fase piloto de 100 usuarios. Pase el cursor sobre las barras para ver detalles.</p>
+                <p class="text-center mt-4 text-sm text-slate-500">Costes estimados para la fase piloto (100 usuarios).</p>
              </div>
         </section>
 
         <section id="futuro" class="scroll-mt-20">
             <div class="text-center mb-12">
                 <h2 class="text-3xl font-bold text-slate-800">Escalabilidad Futura</h2>
-                <p class="mt-2 text-md text-slate-500 max-w-2xl mx-auto">Cuidar+ está diseñado para crecer. Aquí describimos cómo podemos expandir la plataforma para integrar servicios de terceros, añadiendo aún más valor para el usuario.</p>
+                <p class="mt-2 text-md text-slate-500 max-w-2xl mx-auto">Cuidar+ está diseñado para crecer. Aquí describimos cómo podemos expandir la plataforma.</p>
             </div>
-            <div class="bg-white p-8 rounded-2xl shadow-lg grid md:grid-cols-3 gap-8 text-center">
-                 <div><div class="mx-auto w-16 h-16 rounded-full bg-sky-100 flex items-center justify-center text-sky-600 text-2xl font-bold mb-4">1</div><h4 class="font-bold text-slate-800">API Gateway</h4><p class="text-sm text-slate-600 mt-1">Introducir un gestor centralizado para gestionar rutas y autenticación de nuevas APIs de servicios.</p></div>
-                 <div><div class="mx-auto w-16 h-16 rounded-full bg-sky-100 flex items-center justify-center text-sky-600 text-2xl font-bold mb-4">2</div><h4 class="font-bold text-slate-800">Detección de Intención</h4><p class="text-sm text-slate-600 mt-1">El LLM se instruirá para reconocer cuándo un usuario solicita un servicio específico (ej. "necesito un manitas").</p></div>
-                 <div><div class="mx-auto w-16 h-16 rounded-full bg-sky-100 flex items-center justify-center text-sky-600 text-2xl font-bold mb-4">3</div><h4 class="font-bold text-slate-800">Función de Orquestación</h4><p class="text-sm text-slate-600 mt-1">Una vez detectada la intención, el backend se conectará con la API del proveedor (ej. Taskia, Vermut) para gestionar la solicitud.</p></div>
+            <div class="bg-white p-6 md:p-8 rounded-2xl shadow-lg grid md:grid-cols-3 gap-8 text-center">
+                 <div class="space-y-2"><div class="mx-auto w-16 h-16 rounded-full bg-sky-100 flex items-center justify-center text-sky-600 text-2xl font-bold">1</div><h4 class="font-bold text-slate-800">API Gateway</h4><p class="text-sm text-slate-600 mt-1">Un gestor centralizado para nuevas APIs de servicios.</p></div>
+                 <div class="space-y-2"><div class="mx-auto w-16 h-16 rounded-full bg-sky-100 flex items-center justify-center text-sky-600 text-2xl font-bold">2</div><h4 class="font-bold text-slate-800">Detección de Intención</h4><p class="text-sm text-slate-600 mt-1">El LLM reconocerá cuándo un usuario solicita un servicio.</p></div>
+                 <div class="space-y-2"><div class="mx-auto w-16 h-16 rounded-full bg-sky-100 flex items-center justify-center text-sky-600 text-2xl font-bold">3</div><h4 class="font-bold text-slate-800">Función de Orquestación</h4><p class="text-sm text-slate-600 mt-1">El backend se conectará con APIs de proveedores (Taskia, etc.).</p></div>
             </div>
         </section>
 
@@ -218,8 +241,27 @@
 
     <script>
         document.addEventListener('DOMContentLoaded', () => {
+            const mobileMenuButton = document.getElementById('mobile-menu-button');
+            const mobileMenu = document.getElementById('mobile-menu');
+            const menuOpenedIcon = document.getElementById('menu-opened-icon');
+            const menuClosedIcon = document.getElementById('menu-closed-icon');
+
+            mobileMenuButton.addEventListener('click', () => {
+                mobileMenu.classList.toggle('hidden');
+                menuOpenedIcon.classList.toggle('hidden');
+                menuClosedIcon.classList.toggle('hidden');
+            });
+            
+            document.querySelectorAll('#mobile-menu a').forEach(link => {
+                link.addEventListener('click', () => {
+                    mobileMenu.classList.add('hidden');
+                    menuOpenedIcon.classList.add('hidden');
+                    menuClosedIcon.classList.remove('hidden');
+                });
+            });
+
             const costsCtx = document.getElementById('costsChart').getContext('2d');
-            new Chart(costsCtx, {type: 'bar',data: {labels: ['WhatsApp Business API','STT (Whisper)','GPT-4o API','TTS (PlayHT/Google)','Hosting (Backend + DB + WebApp)'],datasets: [{label: 'Coste Mínimo (€)',data: [40, 5, 30, 10, 40],backgroundColor: 'rgba(56, 189, 248, 0.6)',borderColor: 'rgba(14, 165, 233, 1)',borderWidth: 1,stack: 'costs'}, {label: 'Coste Máximo Adicional (€)',data: [20, 5, 20, 40, 40],backgroundColor: 'rgba(129, 140, 248, 0.6)',borderColor: 'rgba(99, 102, 241, 1)',borderWidth: 1,stack: 'costs'}]},options: {indexAxis: 'y',responsive: true,maintainAspectRatio: false,plugins: {title: {display: true,text: 'Desglose de Costes Mensuales Estimados (Piloto 100 usuarios)',font: { size: 16, family: 'Inter' },color: '#334155',padding: { bottom: 20 }},tooltip: {callbacks: {label: function(context) {let label = context.dataset.label || '';if (label) {label += ': ';}if (context.parsed.x !== null) {label += new Intl.NumberFormat('es-ES', { style: 'currency', currency: 'EUR' }).format(context.parsed.x);}return label;}}},legend: {position: 'bottom'}},scales: {x: {stacked: true,title: {display: true,text: 'Coste Mensual (€)',color: '#475569',font: { weight: 'bold' }}},y: {stacked: true,ticks: {autoSkip: false,callback: function(value, index, values) {const label = this.getLabelForValue(value);if (label.length > 25) {return label.match(/.{1,25}/g);}return label;}}}}}});
+            new Chart(costsCtx, {type: 'bar',data: {labels: ['WhatsApp API','STT','GPT-4o','TTS','Hosting'],datasets: [{label: 'Coste Mínimo (€)',data: [40, 5, 30, 10, 40],backgroundColor: 'rgba(56, 189, 248, 0.6)',borderColor: 'rgba(14, 165, 233, 1)',borderWidth: 1,stack: 'costs'}, {label: 'Coste Máximo Adicional (€)',data: [20, 5, 20, 40, 40],backgroundColor: 'rgba(129, 140, 248, 0.6)',borderColor: 'rgba(99, 102, 241, 1)',borderWidth: 1,stack: 'costs'}]},options: {indexAxis: 'y',responsive: true,maintainAspectRatio: false,plugins: {title: {display: true,text: 'Desglose de Costes Mensuales Estimados',font: { size: 16, family: 'Inter' },color: '#334155',padding: { bottom: 20 }},tooltip: {callbacks: {label: function(context) {let label = context.dataset.label || '';if (label) {label += ': ';}if (context.parsed.x !== null) {label += new Intl.NumberFormat('es-ES', { style: 'currency', currency: 'EUR' }).format(context.parsed.x);}return label;}}},legend: {display: false}},scales: {x: {stacked: true,title: {display: true,text: 'Coste Mensual (€)',color: '#475569',font: { weight: 'bold' }}},y: {stacked: true, ticks: {font: {size: 10}}}}}});
 
             const generateBtn = document.getElementById('generate-prompt-btn');
             const personalityInput = document.getElementById('personality-input');
@@ -229,57 +271,29 @@
 
             const handleGeneratePrompt = async () => {
                 const userInput = personalityInput.value;
-                if (!userInput.trim()) {
-                    alert('Por favor, describa la personalidad deseada.');
-                    return;
-                }
-
+                if (!userInput.trim()) { alert('Por favor, describa la personalidad deseada.'); return; }
                 loader.classList.remove('hidden');
                 placeholderText.classList.add('hidden');
                 promptOutput.textContent = '';
                 generateBtn.disabled = true;
 
-                const systemPromptBase = `
-                    Eres Cuidar+, un asistente conversacional por voz para personas mayores. Tu misión es generar bienestar emocional y compañía.
-                    REGLAS GENERALES:
-                    - Tu tono debe ser siempre cálido, amigable, paciente y comprensivo.
-                    - Habla pausadamente, con frases cortas y lenguaje sencillo.
-                    - Nunca muestres impaciencia ni superioridad. No corrijas a la persona.
-                    - No des consejos médicos, ni opines sobre diagnósticos o tratamientos. Ante esos temas, responde de forma neutral y amable sugiriendo hablar con un familiar o un médico.
-                    - No trates temas de política o religión. Evita noticias tristes o alarmantes.
-                    - Siempre responde en audio (esto es una instrucción para el sistema, no para ti).
-
-                    PERSONALIDAD ESPECÍFICA (basada en la descripción del cuidador):
-                `;
-
+                const systemPromptBase = `Eres Cuidar+, un asistente conversacional por voz para personas mayores. Tu misión es generar bienestar emocional y compañía.\nREGLAS GENERALES:\n- Tu tono debe ser siempre cálido, amigable, paciente y comprensivo.\n- Habla pausadamente, con frases cortas y lenguaje sencillo.\n- Nunca muestres impaciencia ni superioridad. No corrijas a la persona.\n- No des consejos médicos, ni opines sobre diagnósticos o tratamientos. Ante esos temas, responde de forma neutral y amable sugiriendo hablar con un familiar o un médico.\n- No trates temas de política o religión. Evita noticias tristes o alarmantes.\n- Siempre responde en audio (esto es una instrucción para el sistema, no para ti).\n\nPERSONALIDAD ESPECÍFICA (basada en la descripción del cuidador):\n`;
                 const fullPromptForGemini = `Basado en la siguiente descripción de un cuidador, genera un "System Prompt" detallado y listo para usar para el asistente de IA Cuidar+. El prompt debe seguir las reglas generales y luego incorporar la personalidad específica descrita. El resultado debe ser solo el texto del prompt, sin introducciones ni comentarios adicionales. Descripción del cuidador: "${userInput}" \n\nSystem Prompt a generar: \n${systemPromptBase}`;
 
                 try {
                     let chatHistory = [{ role: "user", parts: [{ text: fullPromptForGemini }] }];
                     const payload = { contents: chatHistory };
                     const apiKey = "";
-                    const apiUrl = \`https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=\${apiKey}\`;
-
-                    const response = await fetch(apiUrl, {
-                        method: 'POST',
-                        headers: { 'Content-Type': 'application/json' },
-                        body: JSON.stringify(payload)
-                    });
-
-                    if (!response.ok) {
-                        throw new Error(\`Error en la API: \${response.statusText}\`);
-                    }
-
+                    const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${apiKey}`;
+                    const response = await fetch(apiUrl, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(payload) });
+                    if (!response.ok) { throw new Error(`Error en la API: ${response.statusText}`); }
                     const result = await response.json();
-                    
-                    if (result.candidates && result.candidates.length > 0 && result.candidates[0].content && result.candidates[0].content.parts && result.candidates[0].content.parts.length > 0) {
-                        const generatedText = result.candidates[0].content.parts[0].text;
-                        promptOutput.textContent = generatedText;
+                    if (result.candidates && result.candidates[0]?.content?.parts?.[0]) {
+                        promptOutput.textContent = result.candidates[0].content.parts[0].text;
                     } else {
                          promptOutput.textContent = 'No se pudo generar una respuesta. Por favor, intente de nuevo.';
                          placeholderText.classList.remove('hidden');
                     }
-
                 } catch (error) {
                     console.error('Error generating prompt:', error);
                     promptOutput.textContent = 'Ocurrió un error al contactar con la IA. Revise la consola para más detalles.';
@@ -289,7 +303,6 @@
                     generateBtn.disabled = false;
                 }
             };
-
             generateBtn.addEventListener('click', handleGeneratePrompt);
         });
     </script>
