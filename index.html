@@ -10,12 +10,12 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <!-- Chosen Palette: Warm Neutrals (Tailwind's Slate, Sky Blue) -->
-    <!-- Application Structure Plan: A single-page, vertical-scrolling SPA with a sticky top navigation for seamless exploration. The structure is thematic (Project, Solution, Demo, Roadmap, Costs, Scalability). A new interactive "Demo IA" section has been added to showcase the Gemini API's capability for personalization, a core project feature. This enhances the proposal by making the AI's potential tangible. -->
+    <!-- Application Structure Plan: A single-page, vertical-scrolling SPA. The structure is thematic. A new "Plan de Trabajo" section is added after "Hoja de Ruta" to detail the internal project workflow and team roles from the user's PDF, enhancing professionalism and showing a clear execution strategy. -->
     <!-- Visualization & Content Choices:
-    - AI Prompt Generator: Report Info -> Need for customizable personality -> Goal: Inform/Engage -> Viz: Interactive Text Area + Output block -> Interaction: User inputs desired personality, clicks a button, and the Gemini API generates a system prompt -> Justification: Provides a live demo of the project's core personalization feature, making the proposal more compelling and demonstrating technical capability. -> Library/Method: Vanilla JS (fetch to Gemini API).
-    - Architecture Diagram: Report Info -> System Architecture -> Goal: Organize/Inform -> Viz: Interactive diagram with HTML/CSS -> Interaction: Hover to see details -> Justification: More engaging than a static image. -> Library/Method: HTML/Tailwind.
-    - Cost Breakdown: Report Info -> Monthly Cost Estimates -> Goal: Compare/Inform -> Viz: Bar Chart -> Interaction: Hover for details -> Justification: Clearly visualizes cost components. -> Library/Method: Chart.js (Canvas).
-    - Project Timeline: Report Info -> Roadmap Table -> Goal: Change/Inform -> Viz: Vertical Timeline -> Justification: More visually appealing than a table. -> Library/Method: HTML/Tailwind. -->
+    - Team Roles: Report Info -> Task Leaders -> Goal: Inform -> Viz: Grid of profile cards -> Interaction: None -> Justification: Humanizes the project by showing the team.
+    - Workflow Timeline: Report Info -> Meeting schedule & phases -> Goal: Inform -> Viz: Vertical Timeline -> Interaction: None -> Justification: Converts the dense text of the PDF into an easy-to-scan chronological plan.
+    - AI Prompt Generator: Report Info -> Customizable personality -> Goal: Engage -> Viz: Interactive Text Area -> Interaction: User input triggers Gemini API call -> Justification: Live demo of a core feature.
+    - Cost Breakdown: Report Info -> Cost Estimates -> Goal: Compare -> Viz: Bar Chart -> Interaction: Hover -> Justification: Clear financial visualization. -->
     <!-- CONFIRMATION: NO SVG graphics used. NO Mermaid JS used. -->
     <style>
         body {
@@ -90,6 +90,7 @@
                         <a href="#solucion" class="text-slate-600 hover:bg-sky-50 hover:text-sky-600 px-3 py-2 rounded-md text-sm font-medium">Solución</a>
                         <a href="#demo-ia" class="text-slate-600 hover:bg-sky-50 hover:text-sky-600 px-3 py-2 rounded-md text-sm font-medium">Demo IA ✨</a>
                         <a href="#roadmap" class="text-slate-600 hover:bg-sky-50 hover:text-sky-600 px-3 py-2 rounded-md text-sm font-medium">Hoja de Ruta</a>
+                        <a href="#plan-trabajo" class="text-slate-600 hover:bg-sky-50 hover:text-sky-600 px-3 py-2 rounded-md text-sm font-medium">Plan de Trabajo</a>
                         <a href="#costes" class="text-slate-600 hover:bg-sky-50 hover:text-sky-600 px-3 py-2 rounded-md text-sm font-medium">Costes</a>
                         <a href="#futuro" class="text-slate-600 hover:bg-sky-50 hover:text-sky-600 px-3 py-2 rounded-md text-sm font-medium">Futuro</a>
                     </div>
@@ -109,12 +110,13 @@
         </div>
         <div id="mobile-menu" class="md:hidden hidden">
             <div class="px-2 pt-2 pb-3 space-y-1 sm:px-3">
-                <a href="#proyecto" class="text-slate-600 hover:bg-sky-50 hover:text-sky-600 block px-3 py-2 rounded-md text-base font-medium">El Proyecto</a>
-                <a href="#solucion" class="text-slate-600 hover:bg-sky-50 hover:text-sky-600 block px-3 py-2 rounded-md text-base font-medium">Solución</a>
-                <a href="#demo-ia" class="text-slate-600 hover:bg-sky-50 hover:text-sky-600 block px-3 py-2 rounded-md text-base font-medium">Demo IA ✨</a>
-                <a href="#roadmap" class="text-slate-600 hover:bg-sky-50 hover:text-sky-600 block px-3 py-2 rounded-md text-base font-medium">Hoja de Ruta</a>
-                <a href="#costes" class="text-slate-600 hover:bg-sky-50 hover:text-sky-600 block px-3 py-2 rounded-md text-base font-medium">Costes</a>
-                <a href="#futuro" class="text-slate-600 hover:bg-sky-50 hover:text-sky-600 block px-3 py-2 rounded-md text-base font-medium">Futuro</a>
+                <a href="#proyecto" class="mobile-menu-link text-slate-600 hover:bg-sky-50 hover:text-sky-600 block px-3 py-2 rounded-md text-base font-medium">El Proyecto</a>
+                <a href="#solucion" class="mobile-menu-link text-slate-600 hover:bg-sky-50 hover:text-sky-600 block px-3 py-2 rounded-md text-base font-medium">Solución</a>
+                <a href="#demo-ia" class="mobile-menu-link text-slate-600 hover:bg-sky-50 hover:text-sky-600 block px-3 py-2 rounded-md text-base font-medium">Demo IA ✨</a>
+                <a href="#roadmap" class="mobile-menu-link text-slate-600 hover:bg-sky-50 hover:text-sky-600 block px-3 py-2 rounded-md text-base font-medium">Hoja de Ruta</a>
+                <a href="#plan-trabajo" class="mobile-menu-link text-slate-600 hover:bg-sky-50 hover:text-sky-600 block px-3 py-2 rounded-md text-base font-medium">Plan de Trabajo</a>
+                <a href="#costes" class="mobile-menu-link text-slate-600 hover:bg-sky-50 hover:text-sky-600 block px-3 py-2 rounded-md text-base font-medium">Costes</a>
+                <a href="#futuro" class="mobile-menu-link text-slate-600 hover:bg-sky-50 hover:text-sky-600 block px-3 py-2 rounded-md text-base font-medium">Futuro</a>
             </div>
         </div>
     </nav>
@@ -207,6 +209,75 @@
             <div class="bg-white p-6 md:p-8 rounded-2xl shadow-lg"><div class="max-w-3xl mx-auto"><div class="relative"><div class="absolute left-4 top-0 h-full w-0.5 bg-slate-200" aria-hidden="true"></div><div class="relative pl-8 space-y-8"><div class="flex items-start"><div class="flex-shrink-0 w-8 h-8 bg-sky-500 rounded-full flex items-center justify-center text-white font-bold ring-8 ring-white">1</div><div class="ml-4"><h4 class="font-bold text-slate-800">Semanas 1-3: Setup y Backend Core</h4><p class="text-slate-600">Configuración de APIs (WhatsApp) y desarrollo del middleware en Node.js.</p></div></div><div class="flex items-start"><div class="flex-shrink-0 w-8 h-8 bg-sky-500 rounded-full flex items-center justify-center text-white font-bold ring-8 ring-white">2</div><div class="ml-4"><h4 class="font-bold text-slate-800">Semanas 4-5: Integración IA</h4><p class="text-slate-600">Integración de las APIs de STT, LLM y TTS. Creación del flujo completo de audio.</p></div></div><div class="flex items-start"><div class="flex-shrink-0 w-8 h-8 bg-sky-500 rounded-full flex items-center justify-center text-white font-bold ring-8 ring-white">3</div><div class="ml-4"><h4 class="font-bold text-slate-800">Semanas 6-9: Desarrollo WebApp</h4><p class="text-slate-600">Creación de todas las pantallas en React y conexión a la base de datos.</p></div></div><div class="flex items-start"><div class="flex-shrink-0 w-8 h-8 bg-sky-500 rounded-full flex items-center justify-center text-white font-bold ring-8 ring-white">4</div><div class="ml-4"><h4 class="font-bold text-slate-800">Semanas 10-12: Pruebas y Ajustes</h4><p class="text-slate-600">QA testing exhaustivo y ajustes finales basados en el feedback.</p></div></div></div></div></div></div>
         </section>
 
+        <section id="plan-trabajo" class="mb-20 scroll-mt-20">
+            <div class="text-center mb-12">
+                <h2 class="text-3xl font-bold text-slate-800">Plan de Trabajo y Equipo</h2>
+                <p class="mt-2 text-md text-slate-500 max-w-2xl mx-auto">Así nos organizamos. Presentamos al equipo líder y el flujo de trabajo para asegurar la entrega del proyecto a tiempo.</p>
+            </div>
+            <div class="bg-white p-6 md:p-8 rounded-2xl shadow-lg">
+                <h3 class="text-xl font-bold text-center text-slate-800 mb-8">Líderes de Tarea y Responsabilidades</h3>
+                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 text-center">
+                    <div class="bg-slate-50 p-4 rounded-lg border"><p class="font-bold text-sky-700">Manuel</p><p class="text-sm text-slate-600">Líder de Presentación y Resumen Ejecutivo.</p></div>
+                    <div class="bg-slate-50 p-4 rounded-lg border"><p class="font-bold text-sky-700">Pedro</p><p class="text-sm text-slate-600">Líder de Plan de Negocio y Financiero.</p></div>
+                    <div class="bg-slate-50 p-4 rounded-lg border"><p class="font-bold text-sky-700">Juan Carlos</p><p class="text-sm text-slate-600">Líder de Arquitectura de la Solución.</p></div>
+                    <div class="bg-slate-50 p-4 rounded-lg border"><p class="font-bold text-sky-700">Jaime</p><p class="text-sm text-slate-600">Líder de Diseño de Producto.</p></div>
+                    <div class="bg-slate-50 p-4 rounded-lg border"><p class="font-bold text-sky-700">Alex</p><p class="text-sm text-slate-600">Líder de Prototipado.</p></div>
+                    <div class="bg-slate-50 p-4 rounded-lg border"><p class="font-bold text-sky-700">Ludovica & Lorena</p><p class="text-sm text-slate-600">Líderes de Marketing, Socios y Datos.</p></div>
+                </div>
+
+                <h3 class="text-xl font-bold text-center text-slate-800 mt-16 mb-8">Cronología de Entregas y Revisiones</h3>
+                <div class="max-w-3xl mx-auto">
+                    <div class="relative">
+                        <div class="absolute left-4 top-0 h-full w-0.5 bg-slate-200" aria-hidden="true"></div>
+                        <div class="relative pl-8 space-y-8">
+                            <div class="flex items-start">
+                                <div class="flex-shrink-0 w-8 h-8 bg-slate-400 rounded-full flex items-center justify-center text-white font-bold ring-8 ring-white">1</div>
+                                <div class="ml-4">
+                                    <h4 class="font-bold text-slate-800">Jueves 5/Jun: Actualización de Avances</h4>
+                                    <p class="text-slate-600">Presentación de resúmenes por cada líder y discusión de la estructura de la memoria del proyecto.</p>
+                                </div>
+                            </div>
+                            <div class="flex items-start">
+                                <div class="flex-shrink-0 w-8 h-8 bg-slate-400 rounded-full flex items-center justify-center text-white font-bold ring-8 ring-white">2</div>
+                                <div class="ml-4">
+                                    <h4 class="font-bold text-slate-800">Viernes 13/Jun: Revisión de Borradores</h4>
+                                    <p class="text-slate-600">Presentación de borradores desarrollados y sesión de feedback con el "Project Faculty".</p>
+                                </div>
+                            </div>
+                            <div class="flex items-start">
+                                <div class="flex-shrink-0 w-8 h-8 bg-slate-400 rounded-full flex items-center justify-center text-white font-bold ring-8 ring-white">3</div>
+                                <div class="ml-4">
+                                    <h4 class="font-bold text-slate-800">Sábado 14/Jun: Borrador de Presentación</h4>
+                                    <p class="text-slate-600">Manuel presenta el borrador de la presentación final para recibir feedback crítico del equipo.</p>
+                                </div>
+                            </div>
+                             <div class="flex items-start">
+                                <div class="flex-shrink-0 w-8 h-8 bg-slate-400 rounded-full flex items-center justify-center text-white font-bold ring-8 ring-white">4</div>
+                                <div class="ml-4">
+                                    <h4 class="font-bold text-slate-800">Sábado 21/Jun: Integración Final</h4>
+                                    <p class="text-slate-600">Jornada intensiva de revisiones cruzadas, depurado de la memoria y la presentación final.</p>
+                                </div>
+                            </div>
+                            <div class="flex items-start">
+                                <div class="flex-shrink-0 w-8 h-8 bg-slate-400 rounded-full flex items-center justify-center text-white font-bold ring-8 ring-white">5</div>
+                                <div class="ml-4">
+                                    <h4 class="font-bold text-slate-800">Miércoles 25/Jun: Entrega y Ensayo</h4>
+                                    <p class="text-slate-600">Entrega oficial de los documentos y ensayo general de la presentación final.</p>
+                                </div>
+                            </div>
+                             <div class="flex items-start">
+                                <div class="flex-shrink-0 w-8 h-8 bg-green-500 rounded-full flex items-center justify-center text-white font-bold ring-8 ring-white">✓</div>
+                                <div class="ml-4">
+                                    <h4 class="font-bold text-slate-800">Viernes 27/Jun: Presentación Final</h4>
+                                    <p class="text-slate-600">Presentación del proyecto al completo.</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
         <section id="costes" class="mb-20 scroll-mt-20">
             <div class="text-center mb-12">
                 <h2 class="text-3xl font-bold text-slate-800">Estimación de Costes Mensuales</h2>
@@ -253,7 +324,7 @@
                 menuClosedIcon.classList.toggle('hidden');
             });
             
-            document.querySelectorAll('#mobile-menu a').forEach(link => {
+            document.querySelectorAll('.mobile-menu-link').forEach(link => {
                 link.addEventListener('click', () => {
                     mobileMenu.classList.add('hidden');
                     menuOpenedIcon.classList.add('hidden');
@@ -319,4 +390,4 @@
         });
     </script>
 </body>
-</ht
+</html>
