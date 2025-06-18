@@ -3,391 +3,389 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Propuesta Interactiva: Proyecto Cuidar+</title>
+    <title>Cuidar+ | Acompañamiento Inteligente y Servicios Conectados</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-    <!-- Chosen Palette: Warm Neutrals (Tailwind's Slate, Sky Blue) -->
-    <!-- Application Structure Plan: A single-page, vertical-scrolling SPA. The structure is thematic. A new "Plan de Trabajo" section is added after "Hoja de Ruta" to detail the internal project workflow and team roles from the user's PDF, enhancing professionalism and showing a clear execution strategy. -->
-    <!-- Visualization & Content Choices:
-    - Team Roles: Report Info -> Task Leaders -> Goal: Inform -> Viz: Grid of profile cards -> Interaction: None -> Justification: Humanizes the project by showing the team.
-    - Workflow Timeline: Report Info -> Meeting schedule & phases -> Goal: Inform -> Viz: Vertical Timeline -> Interaction: None -> Justification: Converts the dense text of the PDF into an easy-to-scan chronological plan.
-    - AI Prompt Generator: Report Info -> Customizable personality -> Goal: Engage -> Viz: Interactive Text Area -> Interaction: User input triggers Gemini API call -> Justification: Live demo of a core feature.
-    - Cost Breakdown: Report Info -> Cost Estimates -> Goal: Compare -> Viz: Bar Chart -> Interaction: Hover -> Justification: Clear financial visualization. -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <!-- Chosen Palette: Fresh & Trustworthy -->
+    <!-- Application Structure Plan: The SPA now presents a more sophisticated narrative. After the initial problem/solution, it features an animated Caregiver Dashboard. A new, major section "Arquitectura de Futuro y Escalabilidad" has been added. This section explains the technical vision (API Gateway, LLM Intent, Orchestration) and includes a powerful, multi-step animated demo showing a real-world integration with a third-party service (Homeserve). It also outlines the strategy for scaling through platforms like ATiempo. This structure effectively communicates both the current product and its ambitious, technically-grounded future. -->
+    <!-- Visualization & Content Choices: 1. Animated Dashboard: Goal: Explain/Engage -> Viz: HTML/CSS/JS animates new alerts appearing on the caregiver dashboard. 2. Integration Demo: Goal: Explain Process -> Viz: A multi-screen simulation showing the flow from WhatsApp user request -> AI interpretation -> Caregiver notification -> Service dispatch confirmation, a powerful storytelling tool. 3. Scalability Architecture: Goal: Organize/Explain -> Viz: Styled HTML cards to detail the 3-tier architecture. 4. Other visualizations (charts, timeline, organigram) are retained. No SVG/Mermaid used. -->
     <!-- CONFIRMATION: NO SVG graphics used. NO Mermaid JS used. -->
     <style>
-        body {
-            font-family: 'Inter', sans-serif;
+        :root {
+            --primary-blue: #005A9C;
+            --secondary-teal: #00A99D;
+            --light-bg: #F8F9FA;
+            --text-dark: #343A40;
+            --text-light: #6C757D;
+            --white: #FFFFFF;
+            --border-color: #DEE2E6;
+            --whatsapp-bg: #E5DDD5;
+            --whatsapp-green: #DCF8C6;
+            --alert-yellow-border: #FBC02D;
+            --positive-green-border: #4CAF50;
+            --danger-red-border: #d32f2f;
         }
-        .chart-container {
-            position: relative;
-            width: 100%;
-            max-width: 800px;
-            margin-left: auto;
-            margin-right: auto;
-            height: 300px; /* Adjusted for mobile first */
+        body { font-family: 'Inter', sans-serif; background-color: var(--light-bg); color: var(--text-dark); }
+        .hero { background: linear-gradient(rgba(0, 90, 156, 0.8), rgba(0, 90, 156, 0.8)), url('https://images.unsplash.com/photo-1576765608866-5b438e124f5a?q=80&w=2070&auto=format&fit=crop') center center / cover no-repeat; }
+        .stat-card, .dashboard-widget { background-color: var(--white); border-radius: 0.75rem; padding: 1.5rem; text-align: center; box-shadow: 0 4px 15px rgba(0,0,0,0.05); border: 1px solid var(--border-color); }
+        .dashboard-widget { text-align: left; display: flex; flex-direction: column; }
+        .stat-number { font-size: 2.5rem; font-weight: 700; color: var(--primary-blue); }
+        .timeline-item::before { content: ''; position: absolute; left: -0.6rem; top: 0.25rem; width: 1.2rem; height: 1.2rem; border-radius: 50%; background-color: var(--white); border: 4px solid var(--secondary-teal); }
+        .section-fade-in { opacity: 0; transform: translateY(20px); transition: opacity 0.6s ease-out, transform 0.6s ease-out; }
+        .section-fade-in.visible { opacity: 1; transform: translateY(0); }
+        .phone-container { width: 100%; max-width: 380px; height: 680px; background: #111; border-radius: 40px; padding: 12px; box-shadow: 0 20px 40px rgba(0,0,0,0.3); margin: auto; }
+        .phone-screen { background: var(--whatsapp-bg); width: 100%; height: 100%; border-radius: 30px; overflow: hidden; display: flex; flex-direction: column; }
+        .phone-header { background: #075E54; color: white; padding: 1rem 0.75rem; display: flex; align-items: center; flex-shrink: 0; }
+        .chat-area { flex-grow: 1; overflow-y: auto; padding: 1rem; display: flex; flex-direction: column; }
+        .message-bubble { padding: 0.5rem 0.75rem; border-radius: 0.5rem; max-width: 80%; margin-bottom: 0.5rem; word-wrap: break-word; opacity: 0; transform: translateY(10px); animation: slide-up 0.5s ease forwards; }
+        @keyframes slide-up { to { opacity: 1; transform: translateY(0); } }
+        .message-in { background: white; align-self: flex-start; }
+        .message-out { background: var(--whatsapp-green); align-self: flex-end; }
+        .typing-indicator { display: flex; align-items: center; padding: 0.5rem 0.75rem; }
+        .typing-indicator span { height: 8px; width: 8px; margin: 0 2px; background-color: #999; border-radius: 50%; display: inline-block; animation: bounce 1.3s infinite; }
+        .typing-indicator span:nth-child(2) { animation-delay: 0.2s; }
+        .typing-indicator span:nth-child(3) { animation-delay: 0.4s; }
+        @keyframes bounce { 0%, 80%, 100% { transform: scale(0); } 40% { transform: scale(1.0); } }
+        .chart-container { flex-grow: 1; position: relative; width: 100%; }
+        .form-input { width: 100%; padding: 0.75rem; border: 1px solid var(--border-color); border-radius: 0.5rem; transition: border-color 0.3s, box-shadow 0.3s; }
+        .form-input:focus { outline: none; border-color: var(--primary-blue); box-shadow: 0 0 0 3px rgba(0, 90, 156, 0.2); }
+        .alert-item {
+            opacity: 0;
+            max-height: 0;
+            overflow: hidden;
+            transition: all 0.5s ease-in-out;
         }
-        @media (min-width: 768px) {
-            .chart-container {
-                height: 450px;
-            }
-        }
-        .flow-line {
-            position: absolute;
-            background-color: #cbd5e1; /* slate-300 */
-            z-index: -1;
-        }
-        .flow-line.vertical {
-            width: 2px;
-            left: 50%;
-            transform: translateX(-50%);
-        }
-        .flow-line.horizontal {
-            height: 2px;
-            top: 50%;
-            transform: translateY(-50%);
-        }
-        .lds-ring {
-            display: inline-block;
-            position: relative;
-            width: 64px; /* smaller for mobile */
-            height: 64px;
-        }
-        .lds-ring div {
-            box-sizing: border-box;
-            display: block;
-            position: absolute;
-            width: 51px;
-            height: 51px;
-            margin: 6px;
-            border: 6px solid #0284c7;
-            border-radius: 50%;
-            animation: lds-ring 1.2s cubic-bezier(0.5, 0, 0.5, 1) infinite;
-            border-color: #0284c7 transparent transparent transparent;
-        }
-        .lds-ring div:nth-child(1) { animation-delay: -0.45s; }
-        .lds-ring div:nth-child(2) { animation-delay: -0.3s; }
-        .lds-ring div:nth-child(3) { animation-delay: -0.15s; }
-        @keyframes lds-ring {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
+        .alert-item.visible {
+            opacity: 1;
+            max-height: 100px;
         }
     </style>
 </head>
-<body class="bg-slate-50 text-slate-700">
+<body class="antialiased">
 
-    <nav class="bg-white/80 backdrop-blur-lg sticky top-0 z-50 shadow-sm">
-        <div class="container mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="flex items-center justify-between h-16">
-                <div class="flex items-center">
-                    <span class="text-2xl font-extrabold text-sky-600">Cuidar+</span>
-                </div>
-                <div class="hidden md:block">
-                    <div class="ml-10 flex items-baseline space-x-4">
-                        <a href="#proyecto" class="text-slate-600 hover:bg-sky-50 hover:text-sky-600 px-3 py-2 rounded-md text-sm font-medium">El Proyecto</a>
-                        <a href="#solucion" class="text-slate-600 hover:bg-sky-50 hover:text-sky-600 px-3 py-2 rounded-md text-sm font-medium">Solución</a>
-                        <a href="#demo-ia" class="text-slate-600 hover:bg-sky-50 hover:text-sky-600 px-3 py-2 rounded-md text-sm font-medium">Demo IA ✨</a>
-                        <a href="#roadmap" class="text-slate-600 hover:bg-sky-50 hover:text-sky-600 px-3 py-2 rounded-md text-sm font-medium">Hoja de Ruta</a>
-                        <a href="#plan-trabajo" class="text-slate-600 hover:bg-sky-50 hover:text-sky-600 px-3 py-2 rounded-md text-sm font-medium">Plan de Trabajo</a>
-                        <a href="#costes" class="text-slate-600 hover:bg-sky-50 hover:text-sky-600 px-3 py-2 rounded-md text-sm font-medium">Costes</a>
-                        <a href="#futuro" class="text-slate-600 hover:bg-sky-50 hover:text-sky-600 px-3 py-2 rounded-md text-sm font-medium">Futuro</a>
+    <header class="bg-white/90 backdrop-blur-lg sticky top-0 z-50 shadow-sm">
+        <nav class="container mx-auto px-6 py-3 flex justify-between items-center">
+            <a href="#" class="text-2xl font-bold text-primary-blue">Cuidar+</a>
+            <div class="hidden md:flex space-x-6 items-center">
+                <a href="#problema" class="text-gray-600 hover:text-primary-blue">El Reto</a>
+                <a href="#experiencia" class="text-gray-600 hover:text-primary-blue">La Experiencia</a>
+                <a href="#dashboard" class="text-gray-600 hover:text-primary-blue">Dashboard</a>
+                <a href="#escalabilidad" class="text-gray-600 hover:text-primary-blue">Escalabilidad</a>
+                <a href="#equipo" class="text-gray-600 hover:text-primary-blue">Equipo</a>
+            </div>
+            <a href="#contacto" class="hidden md:block bg-secondary-teal text-white font-bold py-2 px-4 rounded-full hover:bg-teal-600 transition-colors">Contactar</a>
+        </nav>
+    </header>
+
+    <main>
+        <!-- Hero Section -->
+        <section class="hero text-white text-center py-20 md:py-32">
+            <div class="container mx-auto px-6">
+                <h1 class="text-4xl md:text-6xl font-bold mb-4">Acompañamiento inteligente para una vida plena.</h1>
+                <p class="text-lg md:text-xl max-w-3xl mx-auto mb-8">Cuidar+ es un asistente conversacional que brinda compañía, bienestar y gestión de servicios para personas mayores y sus familias, directamente a través de WhatsApp.</p>
+                <a href="#experiencia" class="bg-white text-primary-blue font-bold py-3 px-8 rounded-full text-lg hover:bg-gray-200 transition-colors">Ver la Demo Animada</a>
+            </div>
+        </section>
+
+        <!-- El Reto -->
+        <section id="problema" class="py-20 section-fade-in">
+             <div class="container mx-auto px-6 text-center">
+                <h2 class="text-3xl md:text-4xl font-bold mb-4">Un reto social que nos une</h2>
+                <p class="text-lg text-text-light max-w-3xl mx-auto mb-12">El envejecimiento de la población es una realidad. En España, la soledad no deseada y la carga sobre los cuidadores son desafíos crecientes que la tecnología puede y debe ayudar a resolver.</p>
+                <div class="grid md:grid-cols-3 gap-8">
+                    <div class="stat-card">
+                        <span class="stat-number">>2M</span>
+                        <p class="text-text-light mt-2">de personas mayores sufren soledad no deseada en España.</p>
+                    </div>
+                    <div class="stat-card">
+                        <span class="stat-number">30%</span>
+                        <p class="text-text-light mt-2">de la población española tendrá más de 65 años en 2050 (INE).</p>
+                    </div>
+                    <div class="stat-card">
+                        <span class="stat-number">1.4M</span>
+                        <p class="text-text-light mt-2">de mayores usan WhatsApp habitualmente, nuestro mercado objetivo inicial.</p>
                     </div>
                 </div>
-                <div class="md:hidden">
-                    <button id="mobile-menu-button" class="inline-flex items-center justify-center p-2 rounded-md text-slate-500 hover:text-slate-700 hover:bg-slate-100 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-sky-500">
-                        <span class="sr-only">Abrir menú principal</span>
-                        <svg class="h-6 w-6" id="menu-closed-icon" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7" />
-                        </svg>
-                        <svg class="h-6 w-6 hidden" id="menu-opened-icon" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
-                           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
-                        </svg>
-                    </button>
-                </div>
-            </div>
-        </div>
-        <div id="mobile-menu" class="md:hidden hidden">
-            <div class="px-2 pt-2 pb-3 space-y-1 sm:px-3">
-                <a href="#proyecto" class="mobile-menu-link text-slate-600 hover:bg-sky-50 hover:text-sky-600 block px-3 py-2 rounded-md text-base font-medium">El Proyecto</a>
-                <a href="#solucion" class="mobile-menu-link text-slate-600 hover:bg-sky-50 hover:text-sky-600 block px-3 py-2 rounded-md text-base font-medium">Solución</a>
-                <a href="#demo-ia" class="mobile-menu-link text-slate-600 hover:bg-sky-50 hover:text-sky-600 block px-3 py-2 rounded-md text-base font-medium">Demo IA ✨</a>
-                <a href="#roadmap" class="mobile-menu-link text-slate-600 hover:bg-sky-50 hover:text-sky-600 block px-3 py-2 rounded-md text-base font-medium">Hoja de Ruta</a>
-                <a href="#plan-trabajo" class="mobile-menu-link text-slate-600 hover:bg-sky-50 hover:text-sky-600 block px-3 py-2 rounded-md text-base font-medium">Plan de Trabajo</a>
-                <a href="#costes" class="mobile-menu-link text-slate-600 hover:bg-sky-50 hover:text-sky-600 block px-3 py-2 rounded-md text-base font-medium">Costes</a>
-                <a href="#futuro" class="mobile-menu-link text-slate-600 hover:bg-sky-50 hover:text-sky-600 block px-3 py-2 rounded-md text-base font-medium">Futuro</a>
-            </div>
-        </div>
-    </nav>
-
-    <main class="container mx-auto px-4 sm:px-6 lg:px-8 py-8 md:py-12">
-
-        <header class="text-center mb-16">
-            <h1 class="text-3xl sm:text-4xl md:text-5xl font-extrabold text-slate-800 leading-tight">Propuesta de Desarrollo para <span class="text-sky-600">Cuidar+</span></h1>
-            <p class="mt-4 max-w-3xl mx-auto text-base md:text-lg text-slate-500">Una solución innovadora para conectar generaciones, aliviar la soledad y ofrecer tranquilidad a las familias.</p>
-        </header>
-
-        <section id="proyecto" class="mb-20 scroll-mt-20">
-            <div class="text-center mb-12">
-                <h2 class="text-3xl font-bold text-slate-800">El Proyecto: Visión y Objetivo</h2>
-                <p class="mt-2 text-md text-slate-500 max-w-2xl mx-auto">Esta sección detalla el propósito fundamental de Cuidar+, identificando el problema que resuelve y las personas a las que se dirige.</p>
-            </div>
-            <div class="bg-white p-6 md:p-8 rounded-2xl shadow-lg grid md:grid-cols-2 gap-8 items-center">
-                <div class="prose max-w-none">
-                    <h3 class="text-xl font-semibold text-sky-700">Objetivo Principal</h3>
-                    <p>Diseñar un <strong>asistente conversacional por voz en WhatsApp</strong> para personas mayores, con un Portal Web para que sus cuidadores puedan personalizar la experiencia y monitorizar las interacciones.</p>
-                    <h3 class="mt-6 text-xl font-semibold text-sky-700">Perfiles de Usuario</h3>
-                    <ul class="list-disc pl-5 space-y-2">
-                        <li><strong>Primario:</strong> El familiar o cuidador que usa el Portal Web.</li>
-                        <li><strong>Secundario:</strong> La persona mayor que usa WhatsApp.</li>
-                    </ul>
-                </div>
-                <div class="bg-slate-100 p-6 rounded-xl border border-slate-200">
-                    <h4 class="font-bold text-center text-slate-800 mb-4">Customer Journey</h4>
-                    <ol class="relative border-l border-slate-300"><li class="mb-6 ml-4"><div class="absolute w-3 h-3 bg-sky-500 rounded-full mt-1.5 -left-1.5 border border-white"></div><h5 class="font-semibold">1. Registro</h5><p class="text-sm text-slate-600">El cuidador se registra en la WebApp.</p></li><li class="mb-6 ml-4"><div class="absolute w-3 h-3 bg-sky-500 rounded-full mt-1.5 -left-1.5 border border-white"></div><h5 class="font-semibold">2. Creación de Perfil</h5><p class="text-sm text-slate-600">Crea un perfil para la persona mayor.</p></li><li class="mb-6 ml-4"><div class="absolute w-3 h-3 bg-sky-500 rounded-full mt-1.5 -left-1.5 border border-white"></div><h5 class="font-semibold">3. Personalización</h5><p class="text-sm text-slate-600">Define el tono y temas de conversación.</p></li><li class="mb-6 ml-4"><div class="absolute w-3 h-3 bg-sky-500 rounded-full mt-1.5 -left-1.5 border border-white"></div><h5 class="font-semibold">4. Activación</h5><p class="text-sm text-slate-600">Valida el WhatsApp y el asistente se activa.</p></li><li class="ml-4"><div class="absolute w-3 h-3 bg-sky-500 rounded-full mt-1.5 -left-1.5 border border-white"></div><h5 class="font-semibold">5. Monitorización</h5><p class="text-sm text-slate-600">El cuidador supervisa la actividad y alertas.</p></li></ol>
-                </div>
             </div>
         </section>
 
-        <section id="solucion" class="mb-20 scroll-mt-20">
-            <div class="text-center mb-12">
-                <h2 class="text-3xl font-bold text-slate-800">Solución Técnica</h2>
-                <p class="mt-2 text-md text-slate-500 max-w-2xl mx-auto">Aquí exploramos el "cómo": la arquitectura y tecnologías seleccionadas para construir Cuidar+.</p>
-            </div>
-            <div class="bg-white p-6 md:p-8 rounded-2xl shadow-lg">
-                <h3 class="text-xl font-bold text-center text-slate-800 mb-8">Diagrama de Arquitectura</h3>
-                <div class="flex flex-col md:hidden space-y-4 text-center">
-                    <div class="p-4 bg-sky-50 border border-sky-200 rounded-lg shadow-sm"><p class="font-bold">Usuario: Persona Mayor</p></div>
-                    <div class="self-center">↓</div>
-                    <div class="p-4 bg-sky-50 border border-sky-200 rounded-lg shadow-sm"><p class="font-bold">API de WhatsApp</p></div>
-                    <div class="self-center">↓</div>
-                    <div class="p-4 bg-green-50 border border-green-200 rounded-lg shadow-sm"><p class="font-bold">WebApp Cuidador</p></div>
-                    <div class="self-center">↓</div>
-                    <div class="p-4 bg-purple-50 border border-purple-200 rounded-lg shadow-sm"><p class="font-bold">IA (STT → LLM → TTS)</p></div>
-                    <div class="self-center">↓</div>
-                     <div class="p-4 bg-green-50 border border-green-200 rounded-lg shadow-sm"><p class="font-bold">Backend DB</p></div>
-                </div>
-                <div class="relative max-w-4xl mx-auto p-4 hidden md:block"><div class="grid grid-cols-1 md:grid-cols-3 gap-y-16 gap-x-8 items-center text-center"><div class="flow-line vertical" style="top: 80px; height: calc(50% - 80px);"></div><div class="flow-line horizontal" style="left: calc(16.66% + 2rem); width: calc(66.66% - 4rem);"></div><div class="flow-line vertical" style="bottom: 80px; height: calc(50% - 80px); left: 16.66%;"></div><div class="flow-line vertical" style="bottom: 80px; height: calc(50% - 80px); left: 83.33%;"></div><div class="flow-line vertical" style="top: 80px; height: 100px; left: 83.33%;"></div><div class="flow-line horizontal" style="left: calc(50%); width: calc(33.33% + 2rem); top: 180px;"></div><div class="md:col-start-2 group relative cursor-pointer p-4 bg-sky-50 border border-sky-200 rounded-lg shadow-sm transition hover:scale-105"><p class="font-bold">Usuario: Persona Mayor</p><div class="absolute bottom-full mb-2 w-60 left-1/2 -translate-x-1/2 p-2 text-sm bg-slate-800 text-white rounded-md opacity-0 group-hover:opacity-100 transition-opacity">Interactúa únicamente por audios de WhatsApp.</div></div><div class="md:col-start-2 group relative cursor-pointer p-4 bg-sky-50 border border-sky-200 rounded-lg shadow-sm transition hover:scale-105"><p class="font-bold">API de WhatsApp</p><p class="text-xs text-slate-500">(Gupshup)</p><div class="absolute bottom-full mb-2 w-60 left-1/2 -translate-x-1/2 p-2 text-sm bg-slate-800 text-white rounded-md opacity-0 group-hover:opacity-100 transition-opacity">Recibe audios y envía respuestas. Conecta con el cuidador.</div></div><div class="md:col-start-3 row-start-1 md:row-start-2 group relative cursor-pointer p-4 bg-green-50 border border-green-200 rounded-lg shadow-sm transition hover:scale-105"><p class="font-bold">WebApp Cuidador</p><p class="text-xs text-slate-500">(React)</p><div class="absolute bottom-full mb-2 w-60 left-1/2 -translate-x-1/2 p-2 text-sm bg-slate-800 text-white rounded-md opacity-0 group-hover:opacity-100 transition-opacity">Portal para configurar y monitorizar.</div></div><div class="md:col-start-1 row-start-3 group relative cursor-pointer p-4 bg-purple-50 border border-purple-200 rounded-lg shadow-sm transition hover:scale-105"><p class="font-bold">Speech-to-Text</p><p class="text-xs text-slate-500">(Whisper API)</p><div class="absolute top-full mt-2 w-60 left-1/2 -translate-x-1/2 p-2 text-sm bg-slate-800 text-white rounded-md opacity-0 group-hover:opacity-100 transition-opacity">Convierte el audio del usuario a texto.</div></div><div class="md:col-start-3 row-start-3 group relative cursor-pointer p-4 bg-green-50 border border-green-200 rounded-lg shadow-sm transition hover:scale-105"><p class="font-bold">Backend DB</p><p class="text-xs text-slate-500">(PostgreSQL/Firestore)</p><div class="absolute top-full mt-2 w-60 left-1/2 -translate-x-1/2 p-2 text-sm bg-slate-800 text-white rounded-md opacity-0 group-hover:opacity-100 transition-opacity">Almacena logs, perfiles, y alertas.</div></div><div class="md:col-start-1 row-start-4 group relative cursor-pointer p-4 bg-purple-50 border border-purple-200 rounded-lg shadow-sm transition hover:scale-105"><p class="font-bold">LLM: GPT-4o API</p><p class="text-xs text-slate-500">(OpenAI)</p><div class="absolute top-full mt-2 w-60 left-1/2 -translate-x-1/2 p-2 text-sm bg-slate-800 text-white rounded-md opacity-0 group-hover:opacity-100 transition-opacity">Genera la respuesta conversacional.</div></div><div class="md:col-start-1 row-start-5 group relative cursor-pointer p-4 bg-purple-50 border border-purple-200 rounded-lg shadow-sm transition hover:scale-105"><p class="font-bold">Text-to-Speech</p><p class="text-xs text-slate-500">(Play.ht/Google)</p><div class="absolute top-full mt-2 w-60 left-1/2 -translate-x-1/2 p-2 text-sm bg-slate-800 text-white rounded-md opacity-0 group-hover:opacity-100 transition-opacity">Convierte el texto de la IA a un audio natural.</div></div></div></div>
-                <h3 class="text-xl font-bold text-center text-slate-800 mt-16 mb-8">Stack Tecnológico</h3>
-                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"><div class="bg-slate-50 p-6 rounded-xl border border-slate-200"><h4 class="font-bold text-sky-700">WebApp (Frontend)</h4><p class="font-semibold text-slate-800">React (con Vite)</p><p class="text-sm text-slate-600 mt-1">Ideal para crear interfaces interactivas y dinámicas.</p></div><div class="bg-slate-50 p-6 rounded-xl border border-slate-200"><h4 class="font-bold text-sky-700">Backend (Middleware)</h4><p class="font-semibold text-slate-800">Node.js (con Express)</p><p class="text-sm text-slate-600 mt-1">Perfecto para orquestar llamadas a APIs de forma asíncrona.</p></div><div class="bg-slate-50 p-6 rounded-xl border border-slate-200"><h4 class="font-bold text-sky-700">Base de Datos</h4><p class="font-semibold text-slate-800">Firestore (Firebase)</p><p class="text-sm text-slate-600 mt-1">NoSQL, escalable y en tiempo real para monitorización en vivo.</p></div><div class="bg-slate-50 p-6 rounded-xl border border-slate-200"><h4 class="font-bold text-sky-700">Speech-to-Text</h4><p class="font-semibold text-slate-800">Whisper API (OpenAI)</p><p class="text-sm text-slate-600 mt-1">Transcripciones de alta precisión para un habla natural.</p></div><div class="bg-slate-50 p-6 rounded-xl border border-slate-200"><h4 class="font-bold text-sky-700">Modelo de Lenguaje (LLM)</h4><p class="font-semibold text-slate-800">GPT-4o (OpenAI)</p><p class="text-sm text-slate-600 mt-1">Capacidad multimodal y de conversación natural.</p></div><div class="bg-slate-50 p-6 rounded-xl border border-slate-200"><h4 class="font-bold text-sky-700">Text-to-Speech</h4><p class="font-semibold text-slate-800">ElevenLabs / PlayHT</p><p class="text-sm text-slate-600 mt-1">Voces hiperrealistas, cálidas y con entonación natural.</p></div></div>
-            </div>
-        </section>
-
-        <section id="demo-ia" class="mb-20 scroll-mt-20">
-            <div class="text-center mb-12">
-                <h2 class="text-3xl font-bold text-slate-800">Demo Interactiva con IA ✨</h2>
-                <p class="mt-2 text-md text-slate-500 max-w-2xl mx-auto">Pruebe el poder de la personalización. Describa la personalidad del asistente y vea cómo Gemini crea un "System Prompt" a medida.</p>
-            </div>
-            <div class="bg-white p-6 md:p-8 rounded-2xl shadow-lg max-w-4xl mx-auto">
-                <div class="flex flex-col md:grid md:grid-cols-2 gap-8">
-                    <div class="flex flex-col">
-                        <label for="personality-input" class="block text-lg font-semibold text-slate-800 mb-2">1. Describa la personalidad</label>
-                        <textarea id="personality-input" rows="6" class="w-full p-3 border border-slate-300 rounded-lg focus:ring-2 focus:ring-sky-500 focus:border-sky-500 transition flex-grow" placeholder="Ej: Quiero un asistente que sea como un abuelo sabio y cariñoso. Debe ser paciente, usar refranes y hablar de historia y música clásica."></textarea>
-                        <p id="input-error" class="text-red-500 text-sm mt-1 hidden"></p>
+        <!-- La Experiencia Cuidar+ -->
+        <section id="experiencia" class="py-20 bg-white section-fade-in">
+            <div class="container mx-auto px-6">
+                <h2 class="text-3xl md:text-4xl font-bold text-center mb-12">La Experiencia Cuidar+: Simple y Conectada</h2>
+                <div class="grid lg:grid-cols-2 gap-12 items-center">
+                    <div class="text-left">
+                        <h3 class="text-2xl font-bold mb-4">Conversación y Compañía Animada</h3>
+                        <p class="text-text-light mb-6">La persona mayor interactúa de forma natural a través de notas de voz en WhatsApp. Mira cómo Cuidar+ responde de forma amable y proactiva, creando una conversación fluida y reconfortante.</p>
+                        <button id="replay-demo" class="mt-8 bg-primary-blue text-white font-bold py-2 px-6 rounded-full hover:bg-blue-800 transition-colors">▶️ Repetir Demo</button>
                     </div>
-                    <div class="flex flex-col">
-                        <label for="prompt-output" class="block text-lg font-semibold text-slate-800 mb-2">2. System Prompt Generado</label>
-                        <div id="prompt-output-container" class="w-full h-full min-h-[180px] p-4 bg-slate-100 border border-slate-200 rounded-lg relative flex-grow">
-                            <div id="loader" class="hidden absolute inset-0 bg-white/70 flex items-center justify-center"><div class="lds-ring"><div></div><div></div><div></div><div></div></div></div>
-                            <pre id="prompt-output" class="whitespace-pre-wrap text-sm text-slate-700 font-mono"></pre>
-                            <div id="placeholder-text" class="text-slate-400">El prompt generado por la IA aparecerá aquí...</div>
-                        </div>
-                    </div>
-                </div>
-                <button id="generate-prompt-btn" class="mt-6 w-full bg-sky-600 text-white font-bold py-3 px-4 rounded-lg hover:bg-sky-700 transition-colors duration-300 flex items-center justify-center space-x-2">
-                    <span>✨ Generar Prompt con IA</span>
-                </button>
-            </div>
-        </section>
-
-        <section id="roadmap" class="mb-20 scroll-mt-20">
-            <div class="text-center mb-12">
-                <h2 class="text-3xl font-bold text-slate-800">Hoja de Ruta del MVP</h2>
-                <p class="mt-2 text-md text-slate-500 max-w-2xl mx-auto">Presentamos un plan de desarrollo de 10-12 semanas, desglosado en fases claras con hitos específicos.</p>
-            </div>
-            <div class="bg-white p-6 md:p-8 rounded-2xl shadow-lg"><div class="max-w-3xl mx-auto"><div class="relative"><div class="absolute left-4 top-0 h-full w-0.5 bg-slate-200" aria-hidden="true"></div><div class="relative pl-8 space-y-8"><div class="flex items-start"><div class="flex-shrink-0 w-8 h-8 bg-sky-500 rounded-full flex items-center justify-center text-white font-bold ring-8 ring-white">1</div><div class="ml-4"><h4 class="font-bold text-slate-800">Semanas 1-3: Setup y Backend Core</h4><p class="text-slate-600">Configuración de APIs (WhatsApp) y desarrollo del middleware en Node.js.</p></div></div><div class="flex items-start"><div class="flex-shrink-0 w-8 h-8 bg-sky-500 rounded-full flex items-center justify-center text-white font-bold ring-8 ring-white">2</div><div class="ml-4"><h4 class="font-bold text-slate-800">Semanas 4-5: Integración IA</h4><p class="text-slate-600">Integración de las APIs de STT, LLM y TTS. Creación del flujo completo de audio.</p></div></div><div class="flex items-start"><div class="flex-shrink-0 w-8 h-8 bg-sky-500 rounded-full flex items-center justify-center text-white font-bold ring-8 ring-white">3</div><div class="ml-4"><h4 class="font-bold text-slate-800">Semanas 6-9: Desarrollo WebApp</h4><p class="text-slate-600">Creación de todas las pantallas en React y conexión a la base de datos.</p></div></div><div class="flex items-start"><div class="flex-shrink-0 w-8 h-8 bg-sky-500 rounded-full flex items-center justify-center text-white font-bold ring-8 ring-white">4</div><div class="ml-4"><h4 class="font-bold text-slate-800">Semanas 10-12: Pruebas y Ajustes</h4><p class="text-slate-600">QA testing exhaustivo y ajustes finales basados en el feedback.</p></div></div></div></div></div></div>
-        </section>
-
-        <section id="plan-trabajo" class="mb-20 scroll-mt-20">
-            <div class="text-center mb-12">
-                <h2 class="text-3xl font-bold text-slate-800">Plan de Trabajo y Equipo</h2>
-                <p class="mt-2 text-md text-slate-500 max-w-2xl mx-auto">Así nos organizamos. Presentamos al equipo líder y el flujo de trabajo para asegurar la entrega del proyecto a tiempo.</p>
-            </div>
-            <div class="bg-white p-6 md:p-8 rounded-2xl shadow-lg">
-                <h3 class="text-xl font-bold text-center text-slate-800 mb-8">Líderes de Tarea y Responsabilidades</h3>
-                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 text-center">
-                    <div class="bg-slate-50 p-4 rounded-lg border"><p class="font-bold text-sky-700">Manuel</p><p class="text-sm text-slate-600">Líder de Presentación y Resumen Ejecutivo.</p></div>
-                    <div class="bg-slate-50 p-4 rounded-lg border"><p class="font-bold text-sky-700">Pedro</p><p class="text-sm text-slate-600">Líder de Plan de Negocio y Financiero.</p></div>
-                    <div class="bg-slate-50 p-4 rounded-lg border"><p class="font-bold text-sky-700">Juan Carlos</p><p class="text-sm text-slate-600">Líder de Arquitectura de la Solución.</p></div>
-                    <div class="bg-slate-50 p-4 rounded-lg border"><p class="font-bold text-sky-700">Jaime</p><p class="text-sm text-slate-600">Líder de Diseño de Producto.</p></div>
-                    <div class="bg-slate-50 p-4 rounded-lg border"><p class="font-bold text-sky-700">Alex</p><p class="text-sm text-slate-600">Líder de Prototipado.</p></div>
-                    <div class="bg-slate-50 p-4 rounded-lg border"><p class="font-bold text-sky-700">Ludovica & Lorena</p><p class="text-sm text-slate-600">Líderes de Marketing, Socios y Datos.</p></div>
-                </div>
-
-                <h3 class="text-xl font-bold text-center text-slate-800 mt-16 mb-8">Cronología de Entregas y Revisiones</h3>
-                <div class="max-w-3xl mx-auto">
-                    <div class="relative">
-                        <div class="absolute left-4 top-0 h-full w-0.5 bg-slate-200" aria-hidden="true"></div>
-                        <div class="relative pl-8 space-y-8">
-                            <div class="flex items-start">
-                                <div class="flex-shrink-0 w-8 h-8 bg-slate-400 rounded-full flex items-center justify-center text-white font-bold ring-8 ring-white">1</div>
-                                <div class="ml-4">
-                                    <h4 class="font-bold text-slate-800">Jueves 5/Jun: Actualización de Avances</h4>
-                                    <p class="text-slate-600">Presentación de resúmenes por cada líder y discusión de la estructura de la memoria del proyecto.</p>
+                    <div class="phone-container">
+                        <div class="phone-screen">
+                            <div class="phone-header">
+                                <span class="w-10 h-10 bg-secondary-teal rounded-full mr-3 flex items-center justify-center text-xl">C+</span>
+                                <div>
+                                    <div class="font-bold">Cuidar+</div>
+                                    <div id="status-text" class="text-xs text-gray-200">en línea</div>
                                 </div>
                             </div>
-                            <div class="flex items-start">
-                                <div class="flex-shrink-0 w-8 h-8 bg-slate-400 rounded-full flex items-center justify-center text-white font-bold ring-8 ring-white">2</div>
-                                <div class="ml-4">
-                                    <h4 class="font-bold text-slate-800">Viernes 13/Jun: Revisión de Borradores</h4>
-                                    <p class="text-slate-600">Presentación de borradores desarrollados y sesión de feedback con el "Project Faculty".</p>
-                                </div>
-                            </div>
-                            <div class="flex items-start">
-                                <div class="flex-shrink-0 w-8 h-8 bg-slate-400 rounded-full flex items-center justify-center text-white font-bold ring-8 ring-white">3</div>
-                                <div class="ml-4">
-                                    <h4 class="font-bold text-slate-800">Sábado 14/Jun: Borrador de Presentación</h4>
-                                    <p class="text-slate-600">Manuel presenta el borrador de la presentación final para recibir feedback crítico del equipo.</p>
-                                </div>
-                            </div>
-                             <div class="flex items-start">
-                                <div class="flex-shrink-0 w-8 h-8 bg-slate-400 rounded-full flex items-center justify-center text-white font-bold ring-8 ring-white">4</div>
-                                <div class="ml-4">
-                                    <h4 class="font-bold text-slate-800">Sábado 21/Jun: Integración Final</h4>
-                                    <p class="text-slate-600">Jornada intensiva de revisiones cruzadas, depurado de la memoria y la presentación final.</p>
-                                </div>
-                            </div>
-                            <div class="flex items-start">
-                                <div class="flex-shrink-0 w-8 h-8 bg-slate-400 rounded-full flex items-center justify-center text-white font-bold ring-8 ring-white">5</div>
-                                <div class="ml-4">
-                                    <h4 class="font-bold text-slate-800">Miércoles 25/Jun: Entrega y Ensayo</h4>
-                                    <p class="text-slate-600">Entrega oficial de los documentos y ensayo general de la presentación final.</p>
-                                </div>
-                            </div>
-                             <div class="flex items-start">
-                                <div class="flex-shrink-0 w-8 h-8 bg-green-500 rounded-full flex items-center justify-center text-white font-bold ring-8 ring-white">✓</div>
-                                <div class="ml-4">
-                                    <h4 class="font-bold text-slate-800">Viernes 27/Jun: Presentación Final</h4>
-                                    <p class="text-slate-600">Presentación del proyecto al completo.</p>
-                                </div>
-                            </div>
+                            <div id="chat-area" class="chat-area"></div>
                         </div>
                     </div>
                 </div>
             </div>
         </section>
-
-        <section id="costes" class="mb-20 scroll-mt-20">
-            <div class="text-center mb-12">
-                <h2 class="text-3xl font-bold text-slate-800">Estimación de Costes Mensuales</h2>
-                <p class="mt-2 text-md text-slate-500 max-w-2xl mx-auto">Una visión transparente de los costes operativos mensuales estimados para la fase piloto.</p>
+        
+        <!-- Dashboard del Cuidador Animado -->
+        <section id="dashboard" class="py-20 section-fade-in">
+            <div class="container mx-auto px-6">
+                <h2 class="text-3xl md:text-4xl font-bold text-center mb-4">El Portal del Cuidador: Tranquilidad en Tiempo Real</h2>
+                 <p class="text-lg text-text-light max-w-3xl mx-auto text-center mb-12">El portal web ofrece un control total y una visión clara del bienestar del familiar, con alertas y resúmenes que se actualizan dinámicamente.</p>
+                 
+                 <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                     <div class="space-y-6">
+                         <div class="dashboard-widget">
+                             <h3 class="font-bold mb-2">Resumen de Bienestar</h3>
+                             <div class="text-center py-4 bg-positive-green rounded-lg border border-positive-green-border">
+                                 <p id="wellbeing-emoji" class="text-4xl transition-transform duration-500">😊</p>
+                                 <p id="wellbeing-text" class="font-semibold text-green-800">Positivo</p>
+                             </div>
+                         </div>
+                         <div class="dashboard-widget">
+                            <h3 class="font-bold mb-2">Alertas y Notificaciones</h3>
+                            <div id="alerts-container" class="space-y-2">
+                                <p class="text-xs text-center text-text-light py-4">No hay alertas nuevas.</p>
+                            </div>
+                         </div>
+                     </div>
+                     
+                     <div class="lg:col-span-2 grid grid-cols-1 md:grid-cols-2 gap-6">
+                         <div class="dashboard-widget">
+                             <h3 class="font-bold mb-2">Monitor de Medicación (Últ. 7 días)</h3>
+                             <div class="chart-container">
+                                 <canvas id="medicationChart"></canvas>
+                             </div>
+                         </div>
+                         <div class="dashboard-widget">
+                              <h3 class="font-bold mb-2">Tendencia Emocional (Últ. 7 días)</h3>
+                             <div class="chart-container">
+                                 <canvas id="sentimentChart"></canvas>
+                             </div>
+                         </div>
+                     </div>
+                     
+                 </div>
             </div>
-             <div class="bg-white p-6 md:p-8 rounded-2xl shadow-lg">
-                <div class="chart-container">
-                    <canvas id="costsChart"></canvas>
+        </section>
+
+        <!-- Arquitectura de Futuro y Escalabilidad -->
+        <section id="escalabilidad" class="py-20 bg-white section-fade-in">
+            <div class="container mx-auto px-6">
+                <h2 class="text-3xl md:text-4xl font-bold text-center mb-12">Arquitectura de Futuro y Escalabilidad</h2>
+                <div class="grid lg:grid-cols-2 gap-16 items-center">
+                    <div>
+                        <h3 class="text-2xl font-bold mb-4">Preparados para Crecer</h3>
+                        <p class="text-text-light mb-6">Nuestra arquitectura está diseñada para escalar y evolucionar, permitiendo la integración de nuevos servicios de terceros de forma ágil y segura.</p>
+                        <div class="space-y-4">
+                            <div class="flex items-start"><span class="flex-shrink-0 w-8 h-8 bg-primary-blue text-white rounded-full flex items-center justify-center font-bold mr-4">1</span><div><strong class="block">API Gateway:</strong> Un punto de entrada centralizado y seguro para gestionar todas las integraciones de servicios de terceros.</div></div>
+                            <div class="flex items-start"><span class="flex-shrink-0 w-8 h-8 bg-primary-blue text-white rounded-full flex items-center justify-center font-bold mr-4">2</span><div><strong class="block">Detección de Intención (LLM):</strong> La IA identifica automáticamente cuándo un usuario solicita un servicio específico (ej. "necesito un fontanero").</div></div>
+                            <div class="flex items-start"><span class="flex-shrink-0 w-8 h-8 bg-primary-blue text-white rounded-full flex items-center justify-center font-bold mr-4">3</span><div><strong class="block">Orquestación de Servicios:</strong> El backend se conecta con las APIs de proveedores como Homeserve o Taskia para coordinar y ejecutar el servicio solicitado.</div></div>
+                        </div>
+                    </div>
+                    <div>
+                        <h3 class="text-2xl font-bold mb-4">Alianzas Estratégicas para Escalar</h3>
+                        <p class="text-text-light mb-6">El crecimiento se acelerará mediante la integración con plataformas consolidadas, como la plataforma global de salud **ATIEMPO**, ofreciendo Cuidar+ como un servicio de valor añadido a su base de usuarios existente y expandiendo nuestro alcance internacional de forma rápida y eficiente.</p>
+                        <div class="stat-card p-4">
+                            <p class="font-bold">Cuidar+ <span class="text-2xl mx-2 text-secondary-teal">+</span> ATIEMPO</p>
+                            <p class="text-sm text-text-light">Sinergia para un Cuidado Global</p>
+                        </div>
+                    </div>
                 </div>
-                <p class="text-center mt-4 text-sm text-slate-500">Costes estimados para la fase piloto (100 usuarios).</p>
+                
+                <!-- Demo de Integración -->
+                <div class="mt-16">
+                     <h3 class="text-2xl font-bold text-center mb-8">Demo: Gestión de un Servicio Urgente</h3>
+                     <div id="integration-demo-container" class="bg-gray-800 p-6 rounded-lg shadow-xl text-white font-mono text-sm relative">
+                        <div id="integration-steps"></div>
+                        <button id="replay-integration-demo" class="absolute bottom-4 right-4 bg-secondary-teal text-white font-bold py-1 px-3 rounded-full text-xs hover:bg-teal-600 transition-colors">▶️ Repetir</button>
+                     </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Equipo -->
+        <section id="equipo" class="py-20 section-fade-in">
+             <div class="container mx-auto px-6 text-center">
+                <h2 class="text-3xl md:text-4xl font-bold mb-4">Nuestro Equipo Fundador</h2>
+                <p class="text-lg text-text-light max-w-3xl mx-auto mb-12">Un equipo multidisciplinar con una visión compartida, estructurado para la agilidad y el alto rendimiento.</p>
+                <div class="max-w-4xl mx-auto">
+                    <div class="relative flex justify-center items-center mb-8"><div class="stat-card p-4 w-48"><h4 class="font-bold">Manuel Peña</h4><p class="text-sm text-primary-blue">General Manager</p></div></div>
+                     <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                        <div class="space-y-6"><div class="stat-card p-3"><h4 class="font-semibold">Pedro Fernández</h4><p class="text-sm text-text-light">Finance Director</p></div><div class="stat-card p-3"><h4 class="font-semibold">Ludovica Zara</h4><p class="text-sm text-text-light">Sales Director</p></div></div>
+                        <div class="space-y-6"><div class="stat-card p-3"><h4 class="font-semibold">Jaime de la Serna</h4><p class="text-sm text-text-light">Product Development</p></div><div class="stat-card p-3"><h4 class="font-semibold">Juan Carlos Escotet</h4><p class="text-sm text-text-light">Technology Director</p></div></div>
+                        <div class="space-y-6"><div class="stat-card p-3"><h4 class="font-semibold">Lorena Alonso</h4><p class="text-sm text-text-light">Market Intelligence</p></div><div class="stat-card p-3"><h4 class="font-semibold">Alejandro Rodríguez</h4><p class="text-sm text-text-light">Operations Director</p></div></div>
+                    </div>
+                </div>
              </div>
         </section>
 
-        <section id="futuro" class="scroll-mt-20">
-            <div class="text-center mb-12">
-                <h2 class="text-3xl font-bold text-slate-800">Escalabilidad Futura</h2>
-                <p class="mt-2 text-md text-slate-500 max-w-2xl mx-auto">Cuidar+ está diseñado para crecer. Aquí describimos cómo podemos expandir la plataforma.</p>
-            </div>
-            <div class="bg-white p-6 md:p-8 rounded-2xl shadow-lg grid md:grid-cols-3 gap-8 text-center">
-                 <div class="space-y-2"><div class="mx-auto w-16 h-16 rounded-full bg-sky-100 flex items-center justify-center text-sky-600 text-2xl font-bold">1</div><h4 class="font-bold text-slate-800">API Gateway</h4><p class="text-sm text-slate-600 mt-1">Un gestor centralizado para nuevas APIs de servicios.</p></div>
-                 <div class="space-y-2"><div class="mx-auto w-16 h-16 rounded-full bg-sky-100 flex items-center justify-center text-sky-600 text-2xl font-bold">2</div><h4 class="font-bold text-slate-800">Detección de Intención</h4><p class="text-sm text-slate-600 mt-1">El LLM reconocerá cuándo un usuario solicita un servicio.</p></div>
-                 <div class="space-y-2"><div class="mx-auto w-16 h-16 rounded-full bg-sky-100 flex items-center justify-center text-sky-600 text-2xl font-bold">3</div><h4 class="font-bold text-slate-800">Función de Orquestación</h4><p class="text-sm text-slate-600 mt-1">El backend se conectará con APIs de proveedores (Taskia, etc.).</p></div>
+        <!-- Roadmap -->
+        <section id="roadmap" class="py-20 bg-white section-fade-in">
+             <div class="container mx-auto px-6">
+                <h2 class="text-3xl md:text-4xl font-bold text-center mb-12">Nuestro Camino Hacia el Futuro</h2>
+                <div class="max-w-2xl mx-auto"><div class="relative border-l-2 border-secondary-teal pl-8 space-y-12"><div class="timeline-item"><h4 class="font-bold text-lg">Q3 2025: Cierre Ronda Seed & MVP</h4><p class="text-text-light">Asegurar financiación inicial de 150.000€ y finalizar el desarrollo del Producto Mínimo Viable.</p></div><div class="timeline-item"><h4 class="font-bold text-lg">Q4 2025: Programa Piloto</h4><p class="text-text-light">Validar la propuesta de valor con 50 familias en un piloto controlado.</p></div><div class="timeline-item"><h4 class="font-bold text-lg">Q1 2026: Lanzamiento Oficial</h4><p class="text-text-light">Lanzamiento en Madrid y consecución de los primeros 500 usuarios.</p></div><div class="timeline-item"><h4 class="font-bold text-lg">2027: Expansión y Alianzas</h4><p class="text-text-light">Escalado nacional, cierre del primer acuerdo B2B con una aseguradora y preparación para la internacionalización.</p></div></div></div>
             </div>
         </section>
-
+        
+        <!-- Contacto -->
+        <section id="contacto" class="py-20 section-fade-in">
+             <div class="container mx-auto px-6">
+                <div class="max-w-xl mx-auto text-center"><h2 class="text-3xl font-bold mb-4">Hablemos sobre el futuro del cuidado</h2><p class="text-lg text-text-light mb-8">Déjanos tus datos y nos pondremos en contacto contigo en breve.</p></div>
+                <div id="contact-form-container" class="max-w-xl mx-auto bg-white p-8 rounded-lg shadow-lg"><form id="contact-form"><div class="grid sm:grid-cols-2 gap-6"><div><label for="nombre" class="block text-sm font-medium text-text-dark mb-1">Nombre</label><input type="text" id="nombre" name="nombre" required class="form-input"></div><div><label for="telefono" class="block text-sm font-medium text-text-dark mb-1">Teléfono</label><input type="tel" id="telefono" name="telefono" required class="form-input"></div><div class="sm:col-span-2"><label for="email" class="block text-sm font-medium text-text-dark mb-1">Email</label><input type="email" id="email" name="email" required class="form-input"></div><div class="sm:col-span-2"><label for="edad" class="block text-sm font-medium text-text-dark mb-1">Edad del familiar (opcional)</label><input type="number" id="edad" name="edad" class="form-input"></div></div><div class="mt-8 text-center"><button type="submit" class="bg-primary-blue text-white font-bold py-3 px-8 rounded-full text-lg hover:bg-blue-800 transition-colors w-full">Solicitar Información</button></div></form></div>
+             </div>
+        </section>
     </main>
-
-    <footer class="bg-slate-800 text-slate-300 mt-16">
-        <div class="container mx-auto px-4 sm:px-6 lg:px-8 py-6 text-center text-sm">
-            <p>&copy; 2025 Cuidar+. Propuesta de desarrollo de MVP.</p>
-        </div>
-    </footer>
-
+    
     <script>
-        document.addEventListener('DOMContentLoaded', () => {
-            const mobileMenuButton = document.getElementById('mobile-menu-button');
-            const mobileMenu = document.getElementById('mobile-menu');
-            const menuOpenedIcon = document.getElementById('menu-opened-icon');
-            const menuClosedIcon = document.getElementById('menu-closed-icon');
-
-            mobileMenuButton.addEventListener('click', () => {
-                mobileMenu.classList.toggle('hidden');
-                menuOpenedIcon.classList.toggle('hidden');
-                menuClosedIcon.classList.toggle('hidden');
+    document.addEventListener('DOMContentLoaded', () => {
+        const observer = new IntersectionObserver(entries => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) entry.target.classList.add('visible');
             });
-            
-            document.querySelectorAll('.mobile-menu-link').forEach(link => {
-                link.addEventListener('click', () => {
-                    mobileMenu.classList.add('hidden');
-                    menuOpenedIcon.classList.add('hidden');
-                    menuClosedIcon.classList.remove('hidden');
-                });
-            });
+        }, { threshold: 0.1 });
+        document.querySelectorAll('.section-fade-in').forEach(section => observer.observe(section));
 
-            const costsCtx = document.getElementById('costsChart').getContext('2d');
-            new Chart(costsCtx, {type: 'bar',data: {labels: ['WhatsApp API','STT','GPT-4o','TTS','Hosting'],datasets: [{label: 'Coste Mínimo (€)',data: [40, 5, 30, 10, 40],backgroundColor: 'rgba(56, 189, 248, 0.6)',borderColor: 'rgba(14, 165, 233, 1)',borderWidth: 1,stack: 'costs'}, {label: 'Coste Máximo Adicional (€)',data: [20, 5, 20, 40, 40],backgroundColor: 'rgba(129, 140, 248, 0.6)',borderColor: 'rgba(99, 102, 241, 1)',borderWidth: 1,stack: 'costs'}]},options: {indexAxis: 'y',responsive: true,maintainAspectRatio: false,plugins: {title: {display: true,text: 'Desglose de Costes Mensuales Estimados',font: { size: 16, family: 'Inter' },color: '#334155',padding: { bottom: 20 }},tooltip: {callbacks: {label: function(context) {let label = context.dataset.label || '';if (label) {label += ': ';}if (context.parsed.x !== null) {label += new Intl.NumberFormat('es-ES', { style: 'currency', currency: 'EUR' }).format(context.parsed.x);}return label;}}},legend: {display: false}},scales: {x: {stacked: true,title: {display: true,text: 'Coste Mensual (€)',color: '#475569',font: { weight: 'bold' }}},y: {stacked: true, ticks: {font: {size: 10}}}}}});
+        // Animated WhatsApp Demo
+        const chatArea = document.getElementById('chat-area');
+        const statusText = document.getElementById('status-text');
+        const replayDemoButton = document.getElementById('replay-demo');
 
-            const generateBtn = document.getElementById('generate-prompt-btn');
-            const personalityInput = document.getElementById('personality-input');
-            const promptOutput = document.getElementById('prompt-output');
-            const loader = document.getElementById('loader');
-            const placeholderText = document.getElementById('placeholder-text');
-            const inputError = document.getElementById('input-error');
+        const demoMessages = [
+            { from: 'in', text: '¡Buenos días, Consuelo! 😊 Espero que hayas descansado bien. Solo para recordarte que a las 10:00 tienes la pastilla para la tensión.' },
+            { from: 'out', text: 'Vale, gracias hijo. Ahora mismo me la tomo.' },
+            { from: 'in', text: '¡Genial! Me quedo más tranquilo. ¿Te apetece que escuchemos un poco de tu música favorita?' }
+        ];
 
-            const handleGeneratePrompt = async () => {
-                const userInput = personalityInput.value;
+        function createMessageBubble(msg) {
+            const bubble = document.createElement('div');
+            bubble.className = `message-bubble message-${msg.from}`;
+            bubble.innerHTML = `<p class="text-sm">${msg.text}</p>`;
+            return bubble;
+        }
+
+        function createTypingIndicator() {
+            const indicator = document.createElement('div');
+            indicator.className = 'message-bubble message-in typing-indicator';
+            indicator.innerHTML = `<span></span><span></span><span></span>`;
+            return indicator;
+        }
+
+        async function runDemo() {
+            chatArea.innerHTML = '';
+            for (let i = 0; i < demoMessages.length; i++) {
+                const msg = demoMessages[i];
+                if (msg.from === 'in') {
+                    statusText.textContent = 'Cuidar+ está escribiendo...';
+                    const indicator = createTypingIndicator();
+                    chatArea.appendChild(indicator);
+                    chatArea.scrollTop = chatArea.scrollHeight;
+                    await new Promise(resolve => setTimeout(resolve, 1500));
+                    chatArea.removeChild(indicator);
+                }
+                statusText.textContent = 'en línea';
+                const bubble = createMessageBubble(msg);
+                chatArea.appendChild(bubble);
+                chatArea.scrollTop = chatArea.scrollHeight;
+                await new Promise(resolve => setTimeout(resolve, msg.from === 'out' ? 1000 : 2000));
+            }
+        }
+        replayDemoButton.addEventListener('click', runDemo);
+        runDemo();
+
+        // Animated Dashboard
+        const alertsContainer = document.getElementById('alerts-container');
+        const wellbeingEmoji = document.getElementById('wellbeing-emoji');
+        const wellbeingText = document.getElementById('wellbeing-text');
+        
+        const alerts = [
+            { type: 'info', text: 'Medicación de las 10:00 confirmada.', border: 'var(--positive-green-border)' },
+            { type: 'warning', text: 'Tono nostálgico detectado a las 18:32.', border: 'var(--alert-yellow-border)'},
+            { type: 'urgent', text: '<strong>URGENTE:</strong> Detectada posible fuga de agua. Gestionando servicio.', border: 'var(--danger-red-border)'}
+        ];
+
+        async function runDashboardAnimation() {
+            alertsContainer.innerHTML = '<p id="no-alerts" class="text-xs text-center text-text-light py-4">Monitorizando actividad...</p>';
+            await new Promise(r => setTimeout(r, 2000));
+
+            for (let i = 0; i < alerts.length; i++) {
+                 document.getElementById('no-alerts')?.remove();
+                const alert = alerts[i];
+                const alertDiv = document.createElement('div');
+                alertDiv.className = 'alert-item p-3 rounded-lg border-l-4';
+                alertDiv.style.borderColor = alert.border;
+                alertDiv.innerHTML = `<p class="font-semibold text-sm">${alert.text}</p>`;
+                alertsContainer.prepend(alertDiv);
                 
-                inputError.classList.add('hidden');
-                personalityInput.classList.remove('border-red-500');
+                await new Promise(r => setTimeout(r, 100));
+                alertDiv.classList.add('visible');
 
-                if (!userInput.trim()) { 
-                    inputError.textContent = 'Por favor, describa la personalidad deseada.';
-                    inputError.classList.remove('hidden');
-                    personalityInput.classList.add('border-red-500');
-                    return; 
+                if (alert.type === 'urgent') {
+                    wellbeingEmoji.textContent = '😟';
+                    wellbeingEmoji.style.transform = 'scale(1.2)';
+                    wellbeingText.textContent = 'Atención Requerida';
+                    wellbeingText.classList.add('text-red-800');
                 }
                 
-                loader.classList.remove('hidden');
-                placeholderText.classList.add('hidden');
-                promptOutput.textContent = '';
-                generateBtn.disabled = true;
+                await new Promise(r => setTimeout(r, 3000));
+            }
+        }
+        runDashboardAnimation();
 
-                const systemPromptBase = `Eres Cuidar+, un asistente conversacional por voz para personas mayores. Tu misión es generar bienestar emocional y compañía.\nREGLAS GENERALES:\n- Tu tono debe ser siempre cálido, amigable, paciente y comprensivo.\n- Habla pausadamente, con frases cortas y lenguaje sencillo.\n- Nunca muestres impaciencia ni superioridad. No corrijas a la persona.\n- No des consejos médicos, ni opines sobre diagnósticos o tratamientos. Ante esos temas, responde de forma neutral y amable sugiriendo hablar con un familiar o un médico.\n- No trates temas de política o religión. Evita noticias tristes o alarmantes.\n- Siempre responde en audio (esto es una instrucción para el sistema, no para ti).\n\nPERSONALIDAD ESPECÍFICA (basada en la descripción del cuidador):\n`;
-                const fullPromptForGemini = `Basado en la siguiente descripción de un cuidador, genera un "System Prompt" detallado y listo para usar para el asistente de IA Cuidar+. El prompt debe seguir las reglas generales y luego incorporar la personalidad específica descrita. El resultado debe ser solo el texto del prompt, sin introducciones ni comentarios adicionales. Descripción del cuidador: "${userInput}" \n\nSystem Prompt a generar: \n${systemPromptBase}`;
+        // Integration Demo
+        const integrationContainer = document.getElementById('integration-steps');
+        const replayIntegrationBtn = document.getElementById('replay-integration-demo');
 
-                try {
-                    let chatHistory = [{ role: "user", parts: [{ text: fullPromptForGemini }] }];
-                    const payload = { contents: chatHistory };
-                    const apiKey = "";
-                    const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${apiKey}`;
-                    const response = await fetch(apiUrl, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(payload) });
-                    if (!response.ok) { throw new Error(`Error en la API: ${response.statusText}`); }
-                    const result = await response.json();
-                    if (result.candidates && result.candidates[0]?.content?.parts?.[0]) {
-                        promptOutput.textContent = result.candidates[0].content.parts[0].text;
-                    } else {
-                         promptOutput.textContent = 'No se pudo generar una respuesta. Por favor, intente de nuevo.';
-                         placeholderText.classList.remove('hidden');
-                    }
-                } catch (error) {
-                    console.error('Error generating prompt:', error);
-                    promptOutput.textContent = 'Ocurrió un error al contactar con la IA. Revise la consola para más detalles.';
-                    placeholderText.classList.remove('hidden');
-                } finally {
-                    loader.classList.add('hidden');
-                    generateBtn.disabled = false;
-                }
-            };
-            generateBtn.addEventListener('click', handleGeneratePrompt);
+        const integrationSteps = [
+            `<strong>1. Detección (WhatsApp):</strong> Consuelo envía una nota de voz: "¡Ay, se ha roto una tubería en el baño y está saliendo agua!"`,
+            `<strong>2. Interpretación (IA Cuidar+):</strong> El LLM detecta la intención de "avería doméstica" y la entidad "fuga de agua".`,
+            `<strong>3. Orquestación (Backend):</strong> Cuidar+ busca en su red de proveedores y se conecta a la API de 'Homeserve'.`,
+            `<strong>4. Notificación (Portal Cuidador):</strong> Javier recibe una alerta urgente en su dashboard: "⚠️ Fuga de agua detectada. Solicitud de fontanero en curso."`,
+            `<strong>5. Acción y Confirmación:</strong> Cuidar+ envía a Javier: "✅ Homeserve puede enviar un técnico en 60 mins. ¿Autorizas el servicio?"`
+        ];
+
+        async function runIntegrationDemo() {
+            integrationContainer.innerHTML = '';
+            for(let i = 0; i < integrationSteps.length; i++) {
+                const stepEl = document.createElement('div');
+                stepEl.className = 'p-2 my-1 rounded transition-opacity duration-500 opacity-0';
+                stepEl.innerHTML = integrationSteps[i];
+                integrationContainer.appendChild(stepEl);
+                await new Promise(r => setTimeout(r, 100));
+                stepEl.style.opacity = '1';
+                await new Promise(r => setTimeout(r, 2500));
+            }
+        }
+        replayIntegrationBtn.addEventListener('click', runIntegrationDemo);
+        runIntegrationDemo();
+
+
+        // Chart.js
+        const chartTooltipConfig = { plugins: { tooltip: { callbacks: { title: (items) => Array.isArray(items[0].label) ? items[0].label.join(' ') : items[0].label } } } };
+        const commonChartOptions = { responsive: true, maintainAspectRatio: false, plugins: { ...chartTooltipConfig.plugins, legend: { display: false } }, scales: { x: { grid: { display: false } }, y: { grid: { color: '#eef' } } } };
+        
+        new Chart(document.getElementById('medicationChart').getContext('2d'), { type: 'bar', data: { labels: ['Lun', 'Mar', 'Mié', 'Jue', 'Vie', 'Sáb', 'Dom'], datasets: [{ label: 'Tomas', data: [2, 2, 1, 2, 2, 2, 1], backgroundColor: 'rgba(0, 169, 157, 0.6)', borderRadius: 4 }] }, options: { ...commonChartOptions, scales: { ...commonChartOptions.scales, y: { beginAtZero: true, max: 2, ticks: { stepSize: 1 } } } } });
+        new Chart(document.getElementById('sentimentChart').getContext('2d'), { type: 'line', data: { labels: ['Lun', 'Mar', 'Mié', 'Jue', 'Vie', 'Sáb', 'Dom'], datasets: [{ label: 'Sentimiento', data: [8, 8.5, 7, 7.5, 9, 6.5, 8], fill: true, borderColor: 'rgba(0, 90, 156, 1)', backgroundColor: 'rgba(0, 90, 156, 0.1)', tension: 0.4 }] }, options: { ...commonChartOptions, scales: { ...commonChartOptions.scales, y: { min: 0, max: 10 } } } });
+
+        // Contact Form
+        const contactFormContainer = document.getElementById('contact-form-container');
+        document.getElementById('contact-form').addEventListener('submit', (e) => {
+            e.preventDefault();
+            contactFormContainer.innerHTML = `<div class="text-center p-8"><h3 class="text-2xl font-bold text-secondary-teal mb-4">¡Gracias!</h3><p class="text-text-light">Hemos recibido tus datos. Nos pondremos en contacto contigo en breve.</p></div>`;
         });
+    });
     </script>
+
 </body>
 </html>
