@@ -1,183 +1,391 @@
-document.addEventListener('DOMContentLoaded', () => {
-    const observer = new IntersectionObserver(entries => {
-        entries.forEach(entry => {
-            if (entry.isIntersecting) entry.target.classList.add('visible');
-        });
-    }, { threshold: 0.1 });
-    document.querySelectorAll('.section-fade-in').forEach(section => observer.observe(section));
+<!DOCTYPE html>
+<html lang="es" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cuidar+ | Acompañamiento Inteligente y Servicios Conectados</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <!-- Chosen Palette: Fresh & Trustworthy -->
+    <!-- Application Structure Plan: A refined single-page narrative. It flows from Problem (El Reto) to a new, more powerful "La Experiencia Cuidar+" section which now introduces both the WhatsApp view and the concept of the caregiver portal side-by-side. This is immediately followed by a new, detailed, and interactive "Dashboard del Cuidador" section. The app continues with the Customer Journey, Team (Organigrama), and Roadmap. This structure provides a clear, compelling demonstration of both user experiences as requested. -->
+    <!-- Visualization & Content Choices: 1. Animated Demo: Goal: Explain/Engage -> Viz: HTML/CSS/JS simulated phone interface with a timed, sequential message animation and a "typing" indicator to create a realistic chat flow. 2. Caregiver Dashboard: Goal: Explain/Inform -> Viz: A full-width section with multiple interactive widgets (HTML/CSS cards) and two new charts (Medication Adherence Bar Chart, Sentiment Trend Line Chart from Chart.js). 3. Customer Journey & Organigrama: Goal: Organize -> Viz: Styled HTML/CSS cards and Flexbox layouts. This comprehensive update directly addresses user feedback by building out the caregiver's view into a functional, data-rich dashboard. No SVG/Mermaid used. -->
+    <!-- CONFIRMATION: NO SVG graphics used. NO Mermaid JS used. -->
+    <style>
+        :root {
+            --primary-blue: #005A9C;
+            --secondary-teal: #00A99D;
+            --light-bg: #F8F9FA;
+            --text-dark: #343A40;
+            --text-light: #6C757D;
+            --white: #FFFFFF;
+            --border-color: #DEE2E6;
+            --whatsapp-bg: #E5DDD5;
+            --whatsapp-green: #DCF8C6;
+            --alert-yellow-border: #FBC02D;
+            --positive-green-border: #4CAF50;
+            --danger-red-border: #d32f2f;
+        }
+        body { font-family: 'Inter', sans-serif; background-color: var(--light-bg); color: var(--text-dark); }
+        .hero { background: linear-gradient(rgba(0, 90, 156, 0.8), rgba(0, 90, 156, 0.8)), url('https://images.unsplash.com/photo-1576765608866-5b438e124f5a?q=80&w=2070&auto=format&fit=crop') center center / cover no-repeat; }
+        .stat-card, .dashboard-widget { background-color: var(--white); border-radius: 0.75rem; padding: 1.5rem; text-align: center; box-shadow: 0 4px 15px rgba(0,0,0,0.05); border: 1px solid var(--border-color); }
+        .dashboard-widget { text-align: left; display: flex; flex-direction: column; }
+        .stat-number { font-size: 2.5rem; font-weight: 700; color: var(--primary-blue); }
+        .timeline-item::before { content: ''; position: absolute; left: -0.6rem; top: 0.25rem; width: 1.2rem; height: 1.2rem; border-radius: 50%; background-color: var(--white); border: 4px solid var(--secondary-teal); }
+        .section-fade-in { opacity: 0; transform: translateY(20px); transition: opacity 0.6s ease-out, transform 0.6s ease-out; }
+        .section-fade-in.visible { opacity: 1; transform: translateY(0); }
+        .phone-container { width: 100%; max-width: 380px; height: 680px; background: #111; border-radius: 40px; padding: 12px; box-shadow: 0 20px 40px rgba(0,0,0,0.3); margin: auto; }
+        .phone-screen { background: var(--whatsapp-bg); width: 100%; height: 100%; border-radius: 30px; overflow: hidden; display: flex; flex-direction: column; }
+        .phone-header { background: #075E54; color: white; padding: 1rem 0.75rem; display: flex; align-items: center; flex-shrink: 0; }
+        .chat-area { flex-grow: 1; overflow-y: auto; padding: 1rem; display: flex; flex-direction: column; }
+        .message-bubble { padding: 0.5rem 0.75rem; border-radius: 0.5rem; max-width: 80%; margin-bottom: 0.5rem; word-wrap: break-word; opacity: 0; transform: translateY(10px); animation: slide-up 0.5s ease forwards; }
+        @keyframes slide-up { to { opacity: 1; transform: translateY(0); } }
+        .message-in { background: white; align-self: flex-start; }
+        .message-out { background: var(--whatsapp-green); align-self: flex-end; }
+        .typing-indicator { display: flex; align-items: center; padding: 0.5rem 0.75rem; }
+        .typing-indicator span { height: 8px; width: 8px; margin: 0 2px; background-color: #999; border-radius: 50%; display: inline-block; animation: bounce 1.3s infinite; }
+        .typing-indicator span:nth-child(2) { animation-delay: 0.2s; }
+        .typing-indicator span:nth-child(3) { animation-delay: 0.4s; }
+        @keyframes bounce { 0%, 80%, 100% { transform: scale(0); } 40% { transform: scale(1.0); } }
+        .chart-container { flex-grow: 1; position: relative; width: 100%; }
+        .form-input { width: 100%; padding: 0.75rem; border: 1px solid var(--border-color); border-radius: 0.5rem; transition: border-color 0.3s, box-shadow 0.3s; }
+        .form-input:focus { outline: none; border-color: var(--primary-blue); box-shadow: 0 0 0 3px rgba(0, 90, 156, 0.2); }
+        .alert-item {
+            opacity: 0;
+            max-height: 0;
+            overflow: hidden;
+            transition: all 0.5s ease-in-out;
+        }
+        .alert-item.visible {
+            opacity: 1;
+            max-height: 100px;
+        }
+    </style>
+</head>
+<body class="antialiased">
 
-    // Animated WhatsApp Demo
-    const chatArea = document.getElementById('chat-area');
-    const statusText = document.getElementById('status-text');
-    const replayDemoButton = document.getElementById('replay-demo');
+    <header class="bg-white/90 backdrop-blur-lg sticky top-0 z-50 shadow-sm">
+        <nav class="container mx-auto px-6 py-3 flex justify-between items-center">
+            <a href="#" class="text-2xl font-bold text-primary-blue">Cuidar+</a>
+            <div class="hidden md:flex space-x-6 items-center">
+                <a href="#problema" class="text-gray-600 hover:text-primary-blue">El Reto</a>
+                <a href="#experiencia" class="text-gray-600 hover:text-primary-blue">La Experiencia</a>
+                <a href="#dashboard" class="text-gray-600 hover:text-primary-blue">Dashboard</a>
+                <a href="#escalabilidad" class="text-gray-600 hover:text-primary-blue">Escalabilidad</a>
+                <a href="#equipo" class="text-gray-600 hover:text-primary-blue">Equipo</a>
+            </div>
+            <a href="#contacto" class="hidden md:block bg-secondary-teal text-white font-bold py-2 px-4 rounded-full hover:bg-teal-600 transition-colors">Contactar</a>
+        </nav>
+    </header>
 
-    const demoMessages = [
-        { from: 'in', text: '¡Buenos días, Consuelo! 😊 Espero que hayas descansado bien. Solo para recordarte que a las 10:00 tienes la pastilla para la tensión.' },
-        { from: 'out', text: 'Vale, gracias hijo. Ahora mismo me la tomo.' },
-        { from: 'in', text: '¡Genial! Me quedo más tranquilo. ¿Te apetece que escuchemos un poco de tu música favorita?' }
-    ];
+    <main>
+        <!-- Hero Section -->
+        <section class="hero text-white text-center py-20 md:py-32">
+            <div class="container mx-auto px-6">
+                <h1 class="text-4xl md:text-6xl font-bold mb-4">Acompañamiento inteligente para una vida plena.</h1>
+                <p class="text-lg md:text-xl max-w-3xl mx-auto mb-8">Cuidar+ es un asistente conversacional que brinda compañía, bienestar y gestión de servicios para personas mayores y sus familias, directamente a través de WhatsApp.</p>
+                <a href="#experiencia" class="bg-white text-primary-blue font-bold py-3 px-8 rounded-full text-lg hover:bg-gray-200 transition-colors">Ver la Demo Animada</a>
+            </div>
+        </section>
 
-    function createMessageBubble(msg) {
-        const bubble = document.createElement('div');
-        bubble.className = `message-bubble message-${msg.from}`;
-        bubble.innerHTML = `<p class="text-sm">${msg.text}</p>`;
-        return bubble;
-    }
+        <!-- El Reto -->
+        <section id="problema" class="py-20 section-fade-in">
+             <div class="container mx-auto px-6 text-center">
+                <h2 class="text-3xl md:text-4xl font-bold mb-4">Un reto social que nos une</h2>
+                <p class="text-lg text-text-light max-w-3xl mx-auto mb-12">El envejecimiento de la población es una realidad. En España, la soledad no deseada y la carga sobre los cuidadores son desafíos crecientes que la tecnología puede y debe ayudar a resolver.</p>
+                <div class="grid md:grid-cols-3 gap-8">
+                    <div class="stat-card">
+                        <span class="stat-number">>2M</span>
+                        <p class="text-text-light mt-2">de personas mayores sufren soledad no deseada en España.</p>
+                    </div>
+                    <div class="stat-card">
+                        <span class="stat-number">30%</span>
+                        <p class="text-text-light mt-2">de la población española tendrá más de 65 años en 2050 (INE).</p>
+                    </div>
+                    <div class="stat-card">
+                        <span class="stat-number">1.4M</span>
+                        <p class="text-text-light mt-2">de mayores usan WhatsApp habitualmente, nuestro mercado objetivo inicial.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
 
-    function createTypingIndicator() {
-        const indicator = document.createElement('div');
-        indicator.className = 'message-bubble message-in typing-indicator';
-        indicator.innerHTML = `<span></span><span></span><span></span>`;
-        return indicator;
-    }
+        <!-- La Experiencia Cuidar+ -->
+        <section id="experiencia" class="py-20 bg-white section-fade-in">
+            <div class="container mx-auto px-6">
+                <h2 class="text-3xl md:text-4xl font-bold text-center mb-12">La Experiencia Cuidar+: Simple y Conectada</h2>
+                <div class="grid lg:grid-cols-2 gap-12 items-center">
+                    <div class="text-left">
+                        <h3 class="text-2xl font-bold mb-4">Conversación y Compañía Animada</h3>
+                        <p class="text-text-light mb-6">La persona mayor interactúa de forma natural a través de notas de voz en WhatsApp. Mira cómo Cuidar+ responde de forma amable y proactiva, creando una conversación fluida y reconfortante.</p>
+                        <button id="replay-demo" class="mt-8 bg-primary-blue text-white font-bold py-2 px-6 rounded-full hover:bg-blue-800 transition-colors">▶️ Repetir Demo</button>
+                    </div>
+                    <div class="phone-container">
+                        <div class="phone-screen">
+                            <div class="phone-header">
+                                <span class="w-10 h-10 bg-secondary-teal rounded-full mr-3 flex items-center justify-center text-xl">C+</span>
+                                <div>
+                                    <div class="font-bold">Cuidar+</div>
+                                    <div id="status-text" class="text-xs text-gray-200">en línea</div>
+                                </div>
+                            </div>
+                            <div id="chat-area" class="chat-area"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+        
+        <!-- Dashboard del Cuidador Animado -->
+        <section id="dashboard" class="py-20 section-fade-in">
+            <div class="container mx-auto px-6">
+                <h2 class="text-3xl md:text-4xl font-bold text-center mb-4">El Portal del Cuidador: Tranquilidad en Tiempo Real</h2>
+                 <p class="text-lg text-text-light max-w-3xl mx-auto text-center mb-12">El portal web ofrece un control total y una visión clara del bienestar del familiar, con alertas y resúmenes que se actualizan dinámicamente.</p>
+                 
+                 <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                     <div class="space-y-6">
+                         <div class="dashboard-widget">
+                             <h3 class="font-bold mb-2">Resumen de Bienestar</h3>
+                             <div class="text-center py-4 bg-positive-green rounded-lg border border-positive-green-border">
+                                 <p id="wellbeing-emoji" class="text-4xl transition-transform duration-500">😊</p>
+                                 <p id="wellbeing-text" class="font-semibold text-green-800">Positivo</p>
+                             </div>
+                         </div>
+                         <div class="dashboard-widget">
+                            <h3 class="font-bold mb-2">Alertas y Notificaciones</h3>
+                            <div id="alerts-container" class="space-y-2">
+                                <p class="text-xs text-center text-text-light py-4">No hay alertas nuevas.</p>
+                            </div>
+                         </div>
+                     </div>
+                     
+                     <div class="lg:col-span-2 grid grid-cols-1 md:grid-cols-2 gap-6">
+                         <div class="dashboard-widget">
+                             <h3 class="font-bold mb-2">Monitor de Medicación (Últ. 7 días)</h3>
+                             <div class="chart-container">
+                                 <canvas id="medicationChart"></canvas>
+                             </div>
+                         </div>
+                         <div class="dashboard-widget">
+                              <h3 class="font-bold mb-2">Tendencia Emocional (Últ. 7 días)</h3>
+                             <div class="chart-container">
+                                 <canvas id="sentimentChart"></canvas>
+                             </div>
+                         </div>
+                     </div>
+                     
+                 </div>
+            </div>
+        </section>
 
-    async function runDemo() {
-        chatArea.innerHTML = '';
-        for (let i = 0; i < demoMessages.length; i++) {
-            const msg = demoMessages[i];
-            if (msg.from === 'in') {
-                statusText.textContent = 'Cuidar+ está escribiendo...';
-                const indicator = createTypingIndicator();
-                chatArea.appendChild(indicator);
+        <!-- Arquitectura de Futuro y Escalabilidad -->
+        <section id="escalabilidad" class="py-20 bg-white section-fade-in">
+            <div class="container mx-auto px-6">
+                <h2 class="text-3xl md:text-4xl font-bold text-center mb-12">Arquitectura de Futuro y Escalabilidad</h2>
+                <div class="grid lg:grid-cols-2 gap-16 items-center">
+                    <div>
+                        <h3 class="text-2xl font-bold mb-4">Preparados para Crecer</h3>
+                        <p class="text-text-light mb-6">Nuestra arquitectura está diseñada para escalar y evolucionar, permitiendo la integración de nuevos servicios de terceros de forma ágil y segura.</p>
+                        <div class="space-y-4">
+                            <div class="flex items-start"><span class="flex-shrink-0 w-8 h-8 bg-primary-blue text-white rounded-full flex items-center justify-center font-bold mr-4">1</span><div><strong class="block">API Gateway:</strong> Un punto de entrada centralizado y seguro para gestionar todas las integraciones de servicios de terceros.</div></div>
+                            <div class="flex items-start"><span class="flex-shrink-0 w-8 h-8 bg-primary-blue text-white rounded-full flex items-center justify-center font-bold mr-4">2</span><div><strong class="block">Detección de Intención (LLM):</strong> La IA identifica automáticamente cuándo un usuario solicita un servicio específico (ej. "necesito un fontanero").</div></div>
+                            <div class="flex items-start"><span class="flex-shrink-0 w-8 h-8 bg-primary-blue text-white rounded-full flex items-center justify-center font-bold mr-4">3</span><div><strong class="block">Orquestación de Servicios:</strong> El backend se conecta con las APIs de proveedores como Homeserve o Taskia para coordinar y ejecutar el servicio solicitado.</div></div>
+                        </div>
+                    </div>
+                    <div>
+                        <h3 class="text-2xl font-bold mb-4">Alianzas Estratégicas para Escalar</h3>
+                        <p class="text-text-light mb-6">El crecimiento se acelerará mediante la integración con plataformas consolidadas, como la plataforma global de salud **ATIEMPO**, ofreciendo Cuidar+ como un servicio de valor añadido a su base de usuarios existente y expandiendo nuestro alcance internacional de forma rápida y eficiente.</p>
+                        <div class="stat-card p-4">
+                            <p class="font-bold">Cuidar+ <span class="text-2xl mx-2 text-secondary-teal">+</span> ATIEMPO</p>
+                            <p class="text-sm text-text-light">Sinergia para un Cuidado Global</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Demo de Integración -->
+                <div class="mt-16">
+                     <h3 class="text-2xl font-bold text-center mb-8">Demo: Gestión de un Servicio Urgente</h3>
+                     <div id="integration-demo-container" class="bg-gray-800 p-6 rounded-lg shadow-xl text-white font-mono text-sm relative">
+                        <div id="integration-steps"></div>
+                        <button id="replay-integration-demo" class="absolute bottom-4 right-4 bg-secondary-teal text-white font-bold py-1 px-3 rounded-full text-xs hover:bg-teal-600 transition-colors">▶️ Repetir</button>
+                     </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Equipo -->
+        <section id="equipo" class="py-20 section-fade-in">
+             <div class="container mx-auto px-6 text-center">
+                <h2 class="text-3xl md:text-4xl font-bold mb-4">Nuestro Equipo Fundador</h2>
+                <p class="text-lg text-text-light max-w-3xl mx-auto mb-12">Un equipo multidisciplinar con una visión compartida, estructurado para la agilidad y el alto rendimiento.</p>
+                <div class="max-w-4xl mx-auto">
+                    <div class="relative flex justify-center items-center mb-8"><div class="stat-card p-4 w-48"><h4 class="font-bold">Manuel Peña</h4><p class="text-sm text-primary-blue">General Manager</p></div></div>
+                     <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                        <div class="space-y-6"><div class="stat-card p-3"><h4 class="font-semibold">Pedro Fernández</h4><p class="text-sm text-text-light">Finance Director</p></div><div class="stat-card p-3"><h4 class="font-semibold">Ludovica Zara</h4><p class="text-sm text-text-light">Sales Director</p></div></div>
+                        <div class="space-y-6"><div class="stat-card p-3"><h4 class="font-semibold">Jaime de la Serna</h4><p class="text-sm text-text-light">Product Development</p></div><div class="stat-card p-3"><h4 class="font-semibold">Juan Carlos Escotet</h4><p class="text-sm text-text-light">Technology Director</p></div></div>
+                        <div class="space-y-6"><div class="stat-card p-3"><h4 class="font-semibold">Lorena Alonso</h4><p class="text-sm text-text-light">Market Intelligence</p></div><div class="stat-card p-3"><h4 class="font-semibold">Alejandro Rodríguez</h4><p class="text-sm text-text-light">Operations Director</p></div></div>
+                    </div>
+                </div>
+             </div>
+        </section>
+
+        <!-- Roadmap -->
+        <section id="roadmap" class="py-20 bg-white section-fade-in">
+             <div class="container mx-auto px-6">
+                <h2 class="text-3xl md:text-4xl font-bold text-center mb-12">Nuestro Camino Hacia el Futuro</h2>
+                <div class="max-w-2xl mx-auto"><div class="relative border-l-2 border-secondary-teal pl-8 space-y-12"><div class="timeline-item"><h4 class="font-bold text-lg">Q3 2025: Cierre Ronda Seed & MVP</h4><p class="text-text-light">Asegurar financiación inicial de 150.000€ y finalizar el desarrollo del Producto Mínimo Viable.</p></div><div class="timeline-item"><h4 class="font-bold text-lg">Q4 2025: Programa Piloto</h4><p class="text-text-light">Validar la propuesta de valor con 50 familias en un piloto controlado.</p></div><div class="timeline-item"><h4 class="font-bold text-lg">Q1 2026: Lanzamiento Oficial</h4><p class="text-text-light">Lanzamiento en Madrid y consecución de los primeros 500 usuarios.</p></div><div class="timeline-item"><h4 class="font-bold text-lg">2027: Expansión y Alianzas</h4><p class="text-text-light">Escalado nacional, cierre del primer acuerdo B2B con una aseguradora y preparación para la internacionalización.</p></div></div></div>
+            </div>
+        </section>
+        
+        <!-- Contacto -->
+        <section id="contacto" class="py-20 section-fade-in">
+             <div class="container mx-auto px-6">
+                <div class="max-w-xl mx-auto text-center"><h2 class="text-3xl font-bold mb-4">Hablemos sobre el futuro del cuidado</h2><p class="text-lg text-text-light mb-8">Déjanos tus datos y nos pondremos en contacto contigo en breve.</p></div>
+                <div id="contact-form-container" class="max-w-xl mx-auto bg-white p-8 rounded-lg shadow-lg"><form id="contact-form"><div class="grid sm:grid-cols-2 gap-6"><div><label for="nombre" class="block text-sm font-medium text-text-dark mb-1">Nombre</label><input type="text" id="nombre" name="nombre" required class="form-input"></div><div><label for="telefono" class="block text-sm font-medium text-text-dark mb-1">Teléfono</label><input type="tel" id="telefono" name="telefono" required class="form-input"></div><div class="sm:col-span-2"><label for="email" class="block text-sm font-medium text-text-dark mb-1">Email</label><input type="email" id="email" name="email" required class="form-input"></div><div class="sm:col-span-2"><label for="edad" class="block text-sm font-medium text-text-dark mb-1">Edad del familiar (opcional)</label><input type="number" id="edad" name="edad" class="form-input"></div></div><div class="mt-8 text-center"><button type="submit" class="bg-primary-blue text-white font-bold py-3 px-8 rounded-full text-lg hover:bg-blue-800 transition-colors w-full">Solicitar Información</button></div></form></div>
+             </div>
+        </section>
+    </main>
+    
+    <script>
+    document.addEventListener('DOMContentLoaded', () => {
+        const observer = new IntersectionObserver(entries => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) entry.target.classList.add('visible');
+            });
+        }, { threshold: 0.1 });
+        document.querySelectorAll('.section-fade-in').forEach(section => observer.observe(section));
+
+        // Animated WhatsApp Demo
+        const chatArea = document.getElementById('chat-area');
+        const statusText = document.getElementById('status-text');
+        const replayDemoButton = document.getElementById('replay-demo');
+
+        const demoMessages = [
+            { from: 'in', text: '¡Buenos días, Consuelo! 😊 Espero que hayas descansado bien. Solo para recordarte que a las 10:00 tienes la pastilla para la tensión.' },
+            { from: 'out', text: 'Vale, gracias hijo. Ahora mismo me la tomo.' },
+            { from: 'in', text: '¡Genial! Me quedo más tranquilo. ¿Te apetece que escuchemos un poco de tu música favorita?' }
+        ];
+        
+        function createMessageBubble(msg) {
+            const bubble = document.createElement('div');
+            bubble.className = `message-bubble message-${msg.from}`;
+            bubble.innerHTML = `<p class="text-sm">${msg.text}</p>`;
+            return bubble;
+        }
+
+        function createTypingIndicator() {
+            const indicator = document.createElement('div');
+            indicator.className = 'message-bubble message-in typing-indicator';
+            indicator.innerHTML = `<span></span><span></span><span></span>`;
+            return indicator;
+        }
+
+        async function runDemo() {
+            chatArea.innerHTML = '';
+            for (let i = 0; i < demoMessages.length; i++) {
+                const msg = demoMessages[i];
+                if (msg.from === 'in') {
+                    statusText.textContent = 'Cuidar+ está escribiendo...';
+                    const indicator = createTypingIndicator();
+                    chatArea.appendChild(indicator);
+                    chatArea.scrollTop = chatArea.scrollHeight;
+                    await new Promise(resolve => setTimeout(resolve, 1500));
+                    chatArea.removeChild(indicator);
+                }
+                statusText.textContent = 'en línea';
+                const bubble = createMessageBubble(msg);
+                chatArea.appendChild(bubble);
                 chatArea.scrollTop = chatArea.scrollHeight;
-                await new Promise(resolve => setTimeout(resolve, 1500));
-                chatArea.removeChild(indicator);
+                await new Promise(resolve => setTimeout(resolve, msg.from === 'out' ? 1000 : 2000));
             }
-            statusText.textContent = 'en línea';
-            const bubble = createMessageBubble(msg);
-            chatArea.appendChild(bubble);
-            chatArea.scrollTop = chatArea.scrollHeight;
-            await new Promise(resolve => setTimeout(resolve, msg.from === 'out' ? 1000 : 2000));
         }
-    }
-    replayDemoButton.addEventListener('click', runDemo);
-    runDemo();
+        replayDemoButton.addEventListener('click', runDemo);
+        runDemo();
 
-    // Animated Dashboard
-    const alertsContainer = document.getElementById('alerts-container');
-    const wellbeingEmoji = document.getElementById('wellbeing-emoji');
-    const wellbeingText = document.getElementById('wellbeing-text');
+        // Animated Dashboard
+        const alertsContainer = document.getElementById('alerts-container');
+        const wellbeingEmoji = document.getElementById('wellbeing-emoji');
+        const wellbeingText = document.getElementById('wellbeing-text');
+        
+        const alerts = [
+            { type: 'info', text: 'Medicación de las 10:00 confirmada.', border: 'var(--positive-green-border)' },
+            { type: 'warning', text: 'Tono nostálgico detectado a las 18:32.', border: 'var(--alert-yellow-border)'},
+            { type: 'urgent', text: '<strong>URGENTE:</strong> Detectada posible fuga de agua. Gestionando servicio.', border: 'var(--danger-red-border)'}
+        ];
 
-    const alerts = [
-        { type: 'info', text: 'Medicación de las 10:00 confirmada.', border: 'var(--positive-green-border)' },
-        { type: 'warning', text: 'Tono nostálgico detectado a las 18:32.', border: 'var(--alert-yellow-border)'},
-        { type: 'urgent', text: '<strong>URGENTE:</strong> Detectada posible fuga de agua. Gestionando servicio.', border: 'var(--danger-red-border)'}
-    ];
+        async function runDashboardAnimation() {
+            alertsContainer.innerHTML = '<p id="no-alerts" class="text-xs text-center text-text-light py-4">Monitorizando actividad...</p>';
+            await new Promise(r => setTimeout(r, 2000));
 
-    async function runDashboardAnimation() {
-        alertsContainer.innerHTML = '<p id="no-alerts" class="text-xs text-center text-text-light py-4">Monitorizando actividad...</p>';
-        await new Promise(r => setTimeout(r, 2000));
+            for (let i = 0; i < alerts.length; i++) {
+                 document.getElementById('no-alerts')?.remove();
+                const alert = alerts[i];
+                const alertDiv = document.createElement('div');
+                alertDiv.className = 'alert-item p-3 rounded-lg border-l-4';
+                alertDiv.style.borderColor = alert.border;
+                alertDiv.innerHTML = `<p class="font-semibold text-sm">${alert.text}</p>`;
+                alertsContainer.prepend(alertDiv);
+                
+                await new Promise(r => setTimeout(r, 100));
+                alertDiv.classList.add('visible');
 
-        for (let i = 0; i < alerts.length; i++) {
-             document.getElementById('no-alerts')?.remove();
-            const alert = alerts[i];
-            const alertDiv = document.createElement('div');
-            alertDiv.className = 'alert-item p-3 rounded-lg border-l-4';
-            alertDiv.style.borderColor = alert.border;
-            alertDiv.innerHTML = `<p class="font-semibold text-sm">${alert.text}</p>`;
-            alertsContainer.prepend(alertDiv);
-
-            await new Promise(r => setTimeout(r, 100));
-            alertDiv.classList.add('visible');
-
-            if (alert.type === 'urgent') {
-                wellbeingEmoji.textContent = '😟';
-                wellbeingEmoji.style.transform = 'scale(1.2)';
-                wellbeingText.textContent = 'Atención Requerida';
-                wellbeingText.classList.add('text-red-800');
-            }
-
-            await new Promise(r => setTimeout(r, 3000));
-        }
-    }
-    runDashboardAnimation();
-
-    // Integration Demo
-    const integrationContainer = document.getElementById('integration-steps');
-    const replayIntegrationBtn = document.getElementById('replay-integration-demo');
-
-    const integrationSteps = [
-        `<strong>1. Detección (WhatsApp):</strong> Consuelo envía una nota de voz: "¡Ay, se ha roto una tubería en el baño y está saliendo agua!"`,
-        `<strong>2. Interpretación (IA Cuidar+):</strong> El LLM detecta la intención de "avería doméstica" y la entidad "fuga de agua".`,
-        `<strong>3. Orquestación (Backend):</strong> Cuidar+ busca en su red de proveedores y se conecta a la API de 'Homeserve'.`,
-        `<strong>4. Notificación (Portal Cuidador):</strong> Javier recibe una alerta urgente en su dashboard: "⚠️ Fuga de agua detectada. Solicitud de fontanero en curso."`,
-        `<strong>5. Acción y Confirmación:</strong> Cuidar+ envía a Javier: "✅ Homeserve puede enviar un técnico en 60 mins. ¿Autorizas el servicio?"`
-    ];
-
-    async function runIntegrationDemo() {
-        integrationContainer.innerHTML = '';
-        for(let i = 0; i < integrationSteps.length; i++) {
-            const stepEl = document.createElement('div');
-            stepEl.className = 'p-2 my-1 rounded transition-opacity duration-500 opacity-0';
-            stepEl.innerHTML = integrationSteps[i];
-            integrationContainer.appendChild(stepEl);
-            await new Promise(r => setTimeout(r, 100));
-            stepEl.style.opacity = '1';
-            await new Promise(r => setTimeout(r, 2500));
-        }
-    }
-    replayIntegrationBtn.addEventListener('click', runIntegrationDemo);
-    runIntegrationDemo();
-
-    // Chart.js
-    const chartTooltipConfig = { plugins: { tooltip: { callbacks: { title: (items) => Array.isArray(items[0].label) ? items[0].label.join(' ') : items[0].label } } } };
-    const commonChartOptions = { responsive: true, maintainAspectRatio: false, plugins: { ...chartTooltipConfig.plugins, legend: { display: false } }, scales: { x: { grid: { display: false } }, y: { grid: { color: '#eef' } } } };
-
-    new Chart(document.getElementById('medicationChart').getContext('2d'), {
-        type: 'bar',
-        data: {
-            labels: ['Lun', 'Mar', 'Mié', 'Jue', 'Vie', 'Sáb', 'Dom'],
-            datasets: [{
-                label: 'Tomas',
-                data: [2, 2, 1, 2, 2, 2, 1],
-                backgroundColor: 'rgba(0, 169, 157, 0.6)',
-                borderRadius: 4
-            }]
-        },
-        options: {
-            ...commonChartOptions,
-            scales: {
-                ...commonChartOptions.scales,
-                y: {
-                    beginAtZero: true,
-                    max: 2,
-                    ticks: {
-                        stepSize: 1
-                    }
+                if (alert.type === 'urgent') {
+                    wellbeingEmoji.textContent = '😟';
+                    wellbeingEmoji.style.transform = 'scale(1.2)';
+                    wellbeingText.textContent = 'Atención Requerida';
+                    wellbeingText.classList.add('text-red-800');
                 }
+                
+                await new Promise(r => setTimeout(r, 3000));
             }
         }
-    });
+        runDashboardAnimation();
 
-    new Chart(document.getElementById('sentimentChart').getContext('2d'), {
-        type: 'line',
-        data: {
-            labels: ['Lun', 'Mar', 'Mié', 'Jue', 'Vie', 'Sáb', 'Dom'],
-            datasets: [{
-                label: 'Sentimiento',
-                data: [8, 8.5, 7, 7.5, 9, 6.5, 8],
-                fill: true,
-                borderColor: 'rgba(0, 90, 156, 1)',
-                backgroundColor: 'rgba(0, 90, 156, 0.1)',
-                tension: 0.4
-            }]
-        },
-        options: {
-            ...commonChartOptions,
-            scales: {
-                ...commonChartOptions.scales,
-                y: {
-                    min: 0,
-                    max: 10
-                }
+        // Integration Demo
+        const integrationContainer = document.getElementById('integration-steps');
+        const replayIntegrationBtn = document.getElementById('replay-integration-demo');
+
+        const integrationSteps = [
+            `<strong>1. Detección (WhatsApp):</strong> Consuelo envía una nota de voz: "¡Ay, se ha roto una tubería en el baño y está saliendo agua!"`,
+            `<strong>2. Interpretación (IA Cuidar+):</strong> El LLM detecta la intención de "avería doméstica" y la entidad "fuga de agua".`,
+            `<strong>3. Orquestación (Backend):</strong> Cuidar+ busca en su red de proveedores y se conecta a la API de 'Homeserve'.`,
+            `<strong>4. Notificación (Portal Cuidador):</strong> Javier recibe una alerta urgente en su dashboard: "⚠️ Fuga de agua detectada. Solicitud de fontanero en curso."`,
+            `<strong>5. Acción y Confirmación:</strong> Cuidar+ envía a Javier: "✅ Homeserve puede enviar un técnico en 60 mins. ¿Autorizas el servicio?"`
+        ];
+
+        async function runIntegrationDemo() {
+            integrationContainer.innerHTML = '';
+            for(let i = 0; i < integrationSteps.length; i++) {
+                const stepEl = document.createElement('div');
+                stepEl.className = 'p-2 my-1 rounded transition-opacity duration-500 opacity-0';
+                stepEl.innerHTML = integrationSteps[i];
+                integrationContainer.appendChild(stepEl);
+                await new Promise(r => setTimeout(r, 100));
+                stepEl.style.opacity = '1';
+                await new Promise(r => setTimeout(r, 2500));
             }
         }
-    });
+        replayIntegrationBtn.addEventListener('click', runIntegrationDemo);
+        runIntegrationDemo();
 
-    // Contact Form
-    const contactFormContainer = document.getElementById('contact-form-container');
-    document.getElementById('contact-form').addEventListener('submit', (e) => {
-        e.preventDefault();
-        contactFormContainer.innerHTML = `<div class="text-center p-8"><h3 class="text-2xl font-bold text-secondary-teal mb-4">¡Gracias!</h3><p class="text-text-light">Hemos recibido tus datos. Nos pondremos en contacto contigo en breve.</p></div>`;
+
+        // Chart.js
+        const chartTooltipConfig = { plugins: { tooltip: { callbacks: { title: (items) => Array.isArray(items[0].label) ? items[0].label.join(' ') : items[0].label } } } };
+        const commonChartOptions = { responsive: true, maintainAspectRatio: false, plugins: { ...chartTooltipConfig.plugins, legend: { display: false } }, scales: { x: { grid: { display: false } }, y: { grid: { color: '#eef' } } } };
+        
+        new Chart(document.getElementById('medicationChart').getContext('2d'), { type: 'bar', data: { labels: ['Lun', 'Mar', 'Mié', 'Jue', 'Vie', 'Sáb', 'Dom'], datasets: [{ label: 'Tomas', data: [2, 2, 1, 2, 2, 2, 1], backgroundColor: 'rgba(0, 169, 157, 0.6)', borderRadius: 4 }] }, options: { ...commonChartOptions, scales: { ...commonChartOptions.scales, y: { beginAtZero: true, max: 2, ticks: { stepSize: 1 } } } } });
+        new Chart(document.getElementById('sentimentChart').getContext('2d'), { type: 'line', data: { labels: ['Lun', 'Mar', 'Mié', 'Jue', 'Vie', 'Sáb', 'Dom'], datasets: [{ label: 'Sentimiento', data: [8, 8.5, 7, 7.5, 9, 6.5, 8], fill: true, borderColor: 'rgba(0, 90, 156, 1)', backgroundColor: 'rgba(0, 90, 156, 0.1)', tension: 0.4 }] }, options: { ...commonChartOptions, scales: { ...commonChartOptions.scales, y: { min: 0, max: 10 } } } });
+
+        // Contact Form
+        const contactFormContainer = document.getElementById('contact-form-container');
+        document.getElementById('contact-form').addEventListener('submit', (e) => {
+            e.preventDefault();
+            contactFormContainer.innerHTML = `<div class="text-center p-8"><h3 class="text-2xl font-bold text-secondary-teal mb-4">¡Gracias!</h3><p class="text-text-light">Hemos recibido tus datos. Nos pondremos en contacto contigo en breve.</p></div>`;
+        });
     });
-});
+    </script>
+
+</body>
+</html>
