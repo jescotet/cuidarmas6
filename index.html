@@ -1,391 +1,474 @@
 <!DOCTYPE html>
-<html lang="es" class="scroll-smooth">
+<html lang="es">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Cuidar+ | Acompañamiento Inteligente y Servicios Conectados</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
-    <!-- Chosen Palette: Fresh & Trustworthy -->
-    <!-- Application Structure Plan: A refined single-page narrative. It flows from Problem (El Reto) to a new, more powerful "La Experiencia Cuidar+" section which now introduces both the WhatsApp view and the concept of the caregiver portal side-by-side. This is immediately followed by a new, detailed, and interactive "Dashboard del Cuidador" section. The app continues with the Customer Journey, Team (Organigrama), and Roadmap. This structure provides a clear, compelling demonstration of both user experiences as requested. -->
-    <!-- Visualization & Content Choices: 1. Animated Demo: Goal: Explain/Engage -> Viz: HTML/CSS/JS simulated phone interface with a timed, sequential message animation and a "typing" indicator to create a realistic chat flow. 2. Caregiver Dashboard: Goal: Explain/Inform -> Viz: A full-width section with multiple interactive widgets (HTML/CSS cards) and two new charts (Medication Adherence Bar Chart, Sentiment Trend Line Chart from Chart.js). 3. Customer Journey & Organigrama: Goal: Organize -> Viz: Styled HTML/CSS cards and Flexbox layouts. This comprehensive update directly addresses user feedback by building out the caregiver's view into a functional, data-rich dashboard. No SVG/Mermaid used. -->
-    <!-- CONFIRMATION: NO SVG graphics used. NO Mermaid JS used. -->
-    <style>
-        :root {
-            --primary-blue: #005A9C;
-            --secondary-teal: #00A99D;
-            --light-bg: #F8F9FA;
-            --text-dark: #343A40;
-            --text-light: #6C757D;
-            --white: #FFFFFF;
-            --border-color: #DEE2E6;
-            --whatsapp-bg: #E5DDD5;
-            --whatsapp-green: #DCF8C6;
-            --alert-yellow-border: #FBC02D;
-            --positive-green-border: #4CAF50;
-            --danger-red-border: #d32f2f;
-        }
-        body { font-family: 'Inter', sans-serif; background-color: var(--light-bg); color: var(--text-dark); }
-        .hero { background: linear-gradient(rgba(0, 90, 156, 0.8), rgba(0, 90, 156, 0.8)), url('https://images.unsplash.com/photo-1576765608866-5b438e124f5a?q=80&w=2070&auto=format&fit=crop') center center / cover no-repeat; }
-        .stat-card, .dashboard-widget { background-color: var(--white); border-radius: 0.75rem; padding: 1.5rem; text-align: center; box-shadow: 0 4px 15px rgba(0,0,0,0.05); border: 1px solid var(--border-color); }
-        .dashboard-widget { text-align: left; display: flex; flex-direction: column; }
-        .stat-number { font-size: 2.5rem; font-weight: 700; color: var(--primary-blue); }
-        .timeline-item::before { content: ''; position: absolute; left: -0.6rem; top: 0.25rem; width: 1.2rem; height: 1.2rem; border-radius: 50%; background-color: var(--white); border: 4px solid var(--secondary-teal); }
-        .section-fade-in { opacity: 0; transform: translateY(20px); transition: opacity 0.6s ease-out, transform 0.6s ease-out; }
-        .section-fade-in.visible { opacity: 1; transform: translateY(0); }
-        .phone-container { width: 100%; max-width: 380px; height: 680px; background: #111; border-radius: 40px; padding: 12px; box-shadow: 0 20px 40px rgba(0,0,0,0.3); margin: auto; }
-        .phone-screen { background: var(--whatsapp-bg); width: 100%; height: 100%; border-radius: 30px; overflow: hidden; display: flex; flex-direction: column; }
-        .phone-header { background: #075E54; color: white; padding: 1rem 0.75rem; display: flex; align-items: center; flex-shrink: 0; }
-        .chat-area { flex-grow: 1; overflow-y: auto; padding: 1rem; display: flex; flex-direction: column; }
-        .message-bubble { padding: 0.5rem 0.75rem; border-radius: 0.5rem; max-width: 80%; margin-bottom: 0.5rem; word-wrap: break-word; opacity: 0; transform: translateY(10px); animation: slide-up 0.5s ease forwards; }
-        @keyframes slide-up { to { opacity: 1; transform: translateY(0); } }
-        .message-in { background: white; align-self: flex-start; }
-        .message-out { background: var(--whatsapp-green); align-self: flex-end; }
-        .typing-indicator { display: flex; align-items: center; padding: 0.5rem 0.75rem; }
-        .typing-indicator span { height: 8px; width: 8px; margin: 0 2px; background-color: #999; border-radius: 50%; display: inline-block; animation: bounce 1.3s infinite; }
-        .typing-indicator span:nth-child(2) { animation-delay: 0.2s; }
-        .typing-indicator span:nth-child(3) { animation-delay: 0.4s; }
-        @keyframes bounce { 0%, 80%, 100% { transform: scale(0); } 40% { transform: scale(1.0); } }
-        .chart-container { flex-grow: 1; position: relative; width: 100%; }
-        .form-input { width: 100%; padding: 0.75rem; border: 1px solid var(--border-color); border-radius: 0.5rem; transition: border-color 0.3s, box-shadow 0.3s; }
-        .form-input:focus { outline: none; border-color: var(--primary-blue); box-shadow: 0 0 0 3px rgba(0, 90, 156, 0.2); }
-        .alert-item {
-            opacity: 0;
-            max-height: 0;
-            overflow: hidden;
-            transition: all 0.5s ease-in-out;
-        }
-        .alert-item.visible {
-            opacity: 1;
-            max-height: 100px;
-        }
-    </style>
+    <title>Cuidar+ | Tu Tranquilidad y Su Bienestar, Conectados</title>
+    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700;800&family=Open+Sans:wght@400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link rel="icon" href="Logo.jpg" type="image/x-icon">
 </head>
-<body class="antialiased">
+<body>
 
-    <header class="bg-white/90 backdrop-blur-lg sticky top-0 z-50 shadow-sm">
-        <nav class="container mx-auto px-6 py-3 flex justify-between items-center">
-            <a href="#" class="text-2xl font-bold text-primary-blue">Cuidar+</a>
-            <div class="hidden md:flex space-x-6 items-center">
-                <a href="#problema" class="text-gray-600 hover:text-primary-blue">El Reto</a>
-                <a href="#experiencia" class="text-gray-600 hover:text-primary-blue">La Experiencia</a>
-                <a href="#dashboard" class="text-gray-600 hover:text-primary-blue">Dashboard</a>
-                <a href="#escalabilidad" class="text-gray-600 hover:text-primary-blue">Escalabilidad</a>
-                <a href="#equipo" class="text-gray-600 hover:text-primary-blue">Equipo</a>
+    <header class="header">
+        <div class="container">
+            <div class="logo">
+                <a href="#hero" aria-label="Volver al inicio de Cuidar+"><img src="Logo.jpg" alt="Logo Cuidar+"></a>
             </div>
-            <a href="#contacto" class="hidden md:block bg-secondary-teal text-white font-bold py-2 px-4 rounded-full hover:bg-teal-600 transition-colors">Contactar</a>
-        </nav>
+            <nav class="nav">
+                <ul class="nav-links">
+                    <li><a href="#beneficios-detalle">Beneficios y Funcionalidades</a></li>
+                    <li><a href="#como-funciona">Cómo Funciona</a></li>
+                    <li><a href="#planes">Planes y Promoción</a></li>
+                    <li><a href="#partners">Partners</a></li>
+                    <li><a href="#faqs">FAQs</a></li>
+                </ul>
+            </nav>
+            <a href="#planes" class="btn btn-primary nav-cta">¡Aprovecha la Oferta!</a>
+            <button class="menu-toggle" aria-label="Abrir menú de navegación" aria-expanded="false">
+                <i class="fas fa-bars"></i>
+            </button>
+        </div>
     </header>
 
     <main>
-        <!-- Hero Section -->
-        <section class="hero text-white text-center py-20 md:py-32">
-            <div class="container mx-auto px-6">
-                <h1 class="text-4xl md:text-6xl font-bold mb-4">Acompañamiento inteligente para una vida plena.</h1>
-                <p class="text-lg md:text-xl max-w-3xl mx-auto mb-8">Cuidar+ es un asistente conversacional que brinda compañía, bienestar y gestión de servicios para personas mayores y sus familias, directamente a través de WhatsApp.</p>
-                <a href="#experiencia" class="bg-white text-primary-blue font-bold py-3 px-8 rounded-full text-lg hover:bg-gray-200 transition-colors">Ver la Demo Animada</a>
+        <section id="hero" class="hero-section">
+            <div class="container">
+                <div class="hero-content">
+                    <h1>Tu Tranquilidad, Nuestra Tecnología. El Bienestar de tus Mayores, Asegurado.</h1>
+                    <p>Cuidar+ te brinda la paz mental que anhelas, conectándote de forma inteligente y segura con tus padres o seres queridos. Un compañero humano para ellos, un aliado confiable para ti.</p>
+                    <a href="#planes" class="btn btn-hero">Recupera Tu Tranquilidad Ahora</a>
+                </div>
+                <div class="hero-image">
+                    <img src="image_378f06.jpg" alt="Persona mayor y cuidador sonriendo mientras ven un móvil juntos, simbolizando conexión y bienestar digital.">
+                </div>
             </div>
         </section>
 
-        <!-- El Reto -->
-        <section id="problema" class="py-20 section-fade-in">
-             <div class="container mx-auto px-6 text-center">
-                <h2 class="text-3xl md:text-4xl font-bold mb-4">Un reto social que nos une</h2>
-                <p class="text-lg text-text-light max-w-3xl mx-auto mb-12">El envejecimiento de la población es una realidad. En España, la soledad no deseada y la carga sobre los cuidadores son desafíos crecientes que la tecnología puede y debe ayudar a resolver.</p>
-                <div class="grid md:grid-cols-3 gap-8">
-                    <div class="stat-card">
-                        <span class="stat-number">>2M</span>
-                        <p class="text-text-light mt-2">de personas mayores sufren soledad no deseada en España.</p>
+        <section id="problema-solucion" class="problema-solucion-section section">
+            <div class="container">
+                <h2>¿La Preocupación Constante Limita Tu Día a Día? Cuidar+ es la Solución.</h2>
+                <p class="subtitle">Entendemos tus inquietudes como cuidador. Cuidar+ te permite estar conectado sin invadir, informado sin agobiar, y listo para actuar con la confianza de tener el control.</p>
+                <div class="solution-grid">
+                    <div class="solution-item">
+                        <h3>El Desafío del Cuidador</h3>
+                        <ul>
+                            <li><i class="fas fa-hand-point-right" aria-hidden="true"></i> Preocupación continua por su seguridad y salud.</li>
+                            <li><i class="fas fa-hand-point-right" aria-hidden="true"></i> Falta de tiempo para llamadas y visitas frecuentes.</li>
+                            <li><i class="fas fa-hand-point-right" aria-hidden="true"></i> Incertidumbre sobre su estado de ánimo diario.</li>
+                            <li><i class="fas fa-hand-point-right" aria-hidden="true"></i> Miedo a la pérdida de autonomía y eventos inesperados.</li>
+                        </ul>
                     </div>
-                    <div class="stat-card">
-                        <span class="stat-number">30%</span>
-                        <p class="text-text-light mt-2">de la población española tendrá más de 65 años en 2050 (INE).</p>
-                    </div>
-                    <div class="stat-card">
-                        <span class="stat-number">1.4M</span>
-                        <p class="text-text-light mt-2">de mayores usan WhatsApp habitualmente, nuestro mercado objetivo inicial.</p>
+                    <div class="solution-item">
+                        <h3>La Tranquilidad con Cuidar+</h3>
+                        <ul>
+                            <li><i class="fas fa-check-circle" aria-hidden="true"></i> Supervisión discreta y empática.</li>
+                            <li><i class="fas fa-check-circle" aria-hidden="true"></i> Comunicación natural a través de WhatsApp.</li>
+                            <li><i class="fas fa-check-circle" aria-hidden="true"></i> Información detallada y accesible para ti.</li>
+                            <li><i class="fas fa-check-circle" aria-hidden="true"></i> Apoyo en servicios a domicilio y recordatorios.</li>
+                        </ul>
                     </div>
                 </div>
             </div>
         </section>
 
-        <!-- La Experiencia Cuidar+ -->
-        <section id="experiencia" class="py-20 bg-white section-fade-in">
-            <div class="container mx-auto px-6">
-                <h2 class="text-3xl md:text-4xl font-bold text-center mb-12">La Experiencia Cuidar+: Simple y Conectada</h2>
-                <div class="grid lg:grid-cols-2 gap-12 items-center">
-                    <div class="text-left">
-                        <h3 class="text-2xl font-bold mb-4">Conversación y Compañía Animada</h3>
-                        <p class="text-text-light mb-6">La persona mayor interactúa de forma natural a través de notas de voz en WhatsApp. Mira cómo Cuidar+ responde de forma amable y proactiva, creando una conversación fluida y reconfortante.</p>
-                        <button id="replay-demo" class="mt-8 bg-primary-blue text-white font-bold py-2 px-6 rounded-full hover:bg-blue-800 transition-colors">▶️ Repetir Demo</button>
+        <section id="beneficios-detalle" class="beneficios-detalle-section section">
+            <div class="container">
+                <h2>Cuidar+: Beneficios y Funcionalidades en Detalle</h2>
+                <div class="tabs-container">
+                    <div class="tabs-nav" role="tablist">
+                        <button class="tab-button active" data-tab="beneficios-cuidador" role="tab" aria-selected="true" aria-controls="beneficios-cuidador-pane" id="beneficios-cuidador-tab">Para el Cuidador</button>
+                        <button class="tab-button" data-tab="beneficios-mayor" role="tab" aria-selected="false" aria-controls="beneficios-mayor-pane" id="beneficios-mayor-tab">Para el Mayor</button>
+                        <button class="tab-button" data-tab="funcionalidades" role="tab" aria-selected="false" aria-controls="funcionalidades-pane" id="funcionalidades-tab">Funcionalidades Clave</button>
+                        <button class="tab-button" data-tab="servicios" role="tab" aria-selected="false" aria-controls="servicios-pane" id="servicios-tab">Servicios a Domicilio</button>
                     </div>
-                    <div class="phone-container">
-                        <div class="phone-screen">
-                            <div class="phone-header">
-                                <span class="w-10 h-10 bg-secondary-teal rounded-full mr-3 flex items-center justify-center text-xl">C+</span>
-                                <div>
-                                    <div class="font-bold">Cuidar+</div>
-                                    <div id="status-text" class="text-xs text-gray-200">en línea</div>
+                    <div class="tabs-content">
+                        <div id="beneficios-cuidador-pane" class="tab-pane active" role="tabpanel" aria-labelledby="beneficios-cuidador-tab">
+                            <h3>Tu Paz Mental, Nuestra Prioridad</h3>
+                            <p>Con Cuidar+, la tranquilidad es un hecho. Te ofrecemos herramientas potentes para que tengas el control y la información que necesitas, sin sobrecargas.</p>
+                            <div class="grid-2-cols">
+                                <div class="feature-item">
+                                    <i class="fas fa-shield-alt" aria-hidden="true"></i>
+                                    <h4>Tranquilidad 24/7</h4>
+                                    <p>Saber que tu ser querido está acompañado y monitoreado discretamente, sin que tengas que estar siempre presente físicamente, te da una paz inmensa.</p>
+                                </div>
+                                <div class="feature-item">
+                                    <i class="fas fa-chart-line" aria-hidden="true"></i>
+                                    <h4>Visibilidad y Control Total</h4>
+                                    <p>Accede a un dashboard intuitivo con métricas de interacción, estado de ánimo y actividad. Revisa conversaciones (texto y audio) para estar siempre informado, de forma transparente.</p>
+                                </div>
+                                <div class="feature-item">
+                                    <i class="fas fa-bell" aria-hidden="true"></i>
+                                    <h4>Alertas Inteligentes y Personalizadas</h4>
+                                    <p>Recibe notificaciones en tu WhatsApp ante inactividad, cambios de ánimo o cualquier anomalía. Tú decides qué, cuándo y cómo quieres ser alertado, adaptándose a tus necesidades.</p>
+                                </div>
+                                <div class="feature-item">
+                                    <i class="fas fa-calendar-alt" aria-hidden="true"></i>
+                                    <h4>Gestión Remota de su Rutina</h4>
+                                    <p>Programa recordatorios de medicación, citas médicas o eventos familiares desde tu portal web. Carga fechas importantes (cumpleaños, etc.) para que la IA los mencione, fortaleciendo sus vínculos.</p>
                                 </div>
                             </div>
-                            <div id="chat-area" class="chat-area"></div>
                         </div>
-                    </div>
-                </div>
-            </div>
-        </section>
-        
-        <!-- Dashboard del Cuidador Animado -->
-        <section id="dashboard" class="py-20 section-fade-in">
-            <div class="container mx-auto px-6">
-                <h2 class="text-3xl md:text-4xl font-bold text-center mb-4">El Portal del Cuidador: Tranquilidad en Tiempo Real</h2>
-                 <p class="text-lg text-text-light max-w-3xl mx-auto text-center mb-12">El portal web ofrece un control total y una visión clara del bienestar del familiar, con alertas y resúmenes que se actualizan dinámicamente.</p>
-                 
-                 <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
-                     <div class="space-y-6">
-                         <div class="dashboard-widget">
-                             <h3 class="font-bold mb-2">Resumen de Bienestar</h3>
-                             <div class="text-center py-4 bg-positive-green rounded-lg border border-positive-green-border">
-                                 <p id="wellbeing-emoji" class="text-4xl transition-transform duration-500">😊</p>
-                                 <p id="wellbeing-text" class="font-semibold text-green-800">Positivo</p>
-                             </div>
-                         </div>
-                         <div class="dashboard-widget">
-                            <h3 class="font-bold mb-2">Alertas y Notificaciones</h3>
-                            <div id="alerts-container" class="space-y-2">
-                                <p class="text-xs text-center text-text-light py-4">No hay alertas nuevas.</p>
+                        <div id="beneficios-mayor-pane" class="tab-pane" role="tabpanel" aria-labelledby="beneficios-mayor-tab">
+                            <h3>Un Compañero que Cuida de Ellos y Les Devuelve Autonomía</h3>
+                            <p>Cuidar+ no es solo una herramienta, es un amigo que les acompaña, les estimula y les facilita el día a día, potenciando su independencia.</p>
+                            <div class="grid-2-cols">
+                                <div class="feature-item">
+                                    <i class="fas fa-comments" aria-hidden="true"></i>
+                                    <h4>Compañía y Conversación Constante</h4>
+                                    <p>Un asistente que siempre está disponible para charlar, compartir intereses, recordar anécdotas o simplemente escuchar, combatiendo la soledad diaria y fomentando la interacción social.</p>
+                                </div>
+                                <div class="feature-item">
+                                    <i class="fas fa-robot" aria-hidden="true"></i>
+                                    <h4>Asistente Personalizado a su Gusto</h4>
+                                    <p>Pueden elegir el nombre, la voz y el tono de su asistente. Además, la IA aprende sus gustos y temas de conversación preferidos, creando un vínculo único y cómodo para ellos.</p>
+                                </div>
+                                <div class="feature-item">
+                                    <i class="fas fa-taxi" aria-hidden="true"></i>
+                                    <h4>Acceso Fácil a Servicios a Domicilio</h4>
+                                    <p>Solicitar un taxi, un peluquero a domicilio o un podólogo es tan sencillo como pedírselo al asistente por WhatsApp, sin complicaciones ni necesidad de manejar apps complejas.</p>
+                                </div>
+                                <div class="feature-item">
+                                    <i class="fas fa-brain" aria-hidden="true"></i>
+                                    <h4>Estimulación Cognitiva Diaria</h4>
+                                    <p>Ejercicios cognitivos sencillos y personalizados para mantener la mente activa y aguda, integrados de forma lúdica en sus conversaciones diarias, fomentando el bienestar mental.</p>
                             </div>
-                         </div>
-                     </div>
-                     
-                     <div class="lg:col-span-2 grid grid-cols-1 md:grid-cols-2 gap-6">
-                         <div class="dashboard-widget">
-                             <h3 class="font-bold mb-2">Monitor de Medicación (Últ. 7 días)</h3>
-                             <div class="chart-container">
-                                 <canvas id="medicationChart"></canvas>
-                             </div>
-                         </div>
-                         <div class="dashboard-widget">
-                              <h3 class="font-bold mb-2">Tendencia Emocional (Últ. 7 días)</h3>
-                             <div class="chart-container">
-                                 <canvas id="sentimentChart"></canvas>
-                             </div>
-                         </div>
-                     </div>
-                     
-                 </div>
-            </div>
-        </section>
-
-        <!-- Arquitectura de Futuro y Escalabilidad -->
-        <section id="escalabilidad" class="py-20 bg-white section-fade-in">
-            <div class="container mx-auto px-6">
-                <h2 class="text-3xl md:text-4xl font-bold text-center mb-12">Arquitectura de Futuro y Escalabilidad</h2>
-                <div class="grid lg:grid-cols-2 gap-16 items-center">
-                    <div>
-                        <h3 class="text-2xl font-bold mb-4">Preparados para Crecer</h3>
-                        <p class="text-text-light mb-6">Nuestra arquitectura está diseñada para escalar y evolucionar, permitiendo la integración de nuevos servicios de terceros de forma ágil y segura.</p>
-                        <div class="space-y-4">
-                            <div class="flex items-start"><span class="flex-shrink-0 w-8 h-8 bg-primary-blue text-white rounded-full flex items-center justify-center font-bold mr-4">1</span><div><strong class="block">API Gateway:</strong> Un punto de entrada centralizado y seguro para gestionar todas las integraciones de servicios de terceros.</div></div>
-                            <div class="flex items-start"><span class="flex-shrink-0 w-8 h-8 bg-primary-blue text-white rounded-full flex items-center justify-center font-bold mr-4">2</span><div><strong class="block">Detección de Intención (LLM):</strong> La IA identifica automáticamente cuándo un usuario solicita un servicio específico (ej. "necesito un fontanero").</div></div>
-                            <div class="flex items-start"><span class="flex-shrink-0 w-8 h-8 bg-primary-blue text-white rounded-full flex items-center justify-center font-bold mr-4">3</span><div><strong class="block">Orquestación de Servicios:</strong> El backend se conecta con las APIs de proveedores como Homeserve o Taskia para coordinar y ejecutar el servicio solicitado.</div></div>
+                            </div>
+                        </div>
+                        <div id="funcionalidades-pane" class="tab-pane" role="tabpanel" aria-labelledby="funcionalidades-tab">
+                            <h3>Tecnología Avanzada a Tu Servicio, Simplificada</h3>
+                            <p>Descubre el corazón tecnológico de Cuidar+ que hace posible una experiencia de cuidado inteligente y sin esfuerzo.</p>
+                            <div class="grid-2-cols">
+                                <div class="feature-item">
+                                    <i class="fas fa-phone-alt" aria-hidden="true"></i>
+                                    <h4>Llamada WhatsApp con IA (Gemini)</h4>
+                                    <p>La funcionalidad estrella: interacción por voz fluida y en tiempo real, como si hablaran con un humano. Nuestra IA, potenciada por Google Gemini, ofrece respuestas naturales y contextuales, revolucionando la comunicación.</p>
+                                </div>
+                                <div class="feature-item">
+                                    <i class="fab fa-whatsapp" aria-hidden="true"></i>
+                                    <h4>Integración Nativia y Segura en WhatsApp</h4>
+                                    <p>Máxima simplicidad y seguridad: el asistente funciona directamente en la aplicación que ya usan y conocen, eliminando barreras tecnológicas y garantizando la privacidad de las comunicaciones.</p>
+                                </div>
+                                <div class="feature-item">
+                                    <i class="fas fa-microphone-alt" aria-hidden="true"></i>
+                                    <h4>Análisis de Voz y Texto con IA</h4>
+                                    <p>Nuestra avanzada IA analiza el tono de voz y el contenido de los mensajes de tu mayor para detectar cambios sutiles en su estado de ánimo o posibles situaciones de riesgo, alertándote discretamente para que puedas actuar.</p>
+                                </div>
+                                <div class="feature-item">
+                                    <i class="fas fa-desktop" aria-hidden="true"></i>
+                                    <h4>Portal Web del Cuidador Intuitivo</h4>
+                                    <p>Un backoffice completo diseñado para ti: un dashboard de actividad fácil de entender, historial de interacciones detallado (audio y texto), gestión de recordatorios y una configuración flexible de alertas para tu total control.</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div id="servicios-pane" class="tab-pane" role="tabpanel" aria-labelledby="servicios-tab">
+                            <h3>Servicios a Domicilio: Comodidad y Autonomía al Alcance de la Voz</h3>
+                            <p>Facilitamos el acceso a servicios esenciales para tu mayor, gestionados de forma sencilla y transparente para ti.</p>
+                            <div class="grid-2-cols">
+                                <div class="feature-item">
+                                    <i class="fas fa-car" aria-hidden="true"></i>
+                                    <h4>Taxi a Demanda y Más</h4>
+                                    <p>Tu mayor puede solicitar un taxi directamente al asistente, sin complicaciones. Tú recibes la notificación y puedes gestionar el pago, asegurando su movilidad de forma segura.</p>
+                                </div>
+                                <div class="feature-item">
+                                    <i class="fas fa-concierge-bell" aria-hidden="true"></i>
+                                    <h4>Conectado con Webel y Amplia Red de Servicios</h4>
+                                    <p>Integración con plataformas líderes como Webel nos permite ofrecer acceso a una amplia variedad de servicios a domicilio: desde peluquería y podología hasta fisioterapia y otros cuidados, todo gestionado a través de la IA de Cuidar+.</p>
+                                </div>
+                                <div class="feature-item">
+                                    <i class="fas fa-hand-holding-usd" aria-hidden="true"></i>
+                                    <h4>Control de Costes Transparente</h4>
+                                    <p>En el Plan Esencial, solo pagas 1€ por servicio solicitado. En los planes Tranquilidad y Tranquilidad Total, la contratación de servicios a domicilio no tiene coste adicional, ofreciéndote total previsibilidad.</p>
+                                </div>
+                                <div class="feature-item">
+                                    <i class="fas fa-mobile-alt" aria-hidden="true"></i>
+                                    <h4>Aprobación Rápida desde tu Móvil</h4>
+                                    <p>Recibe la solicitud del servicio en tu portal web, revisa los detalles, aprueba o deniega y gestiona el pago de forma sencilla y segura desde cualquier lugar, dándote control total.</p>
+                                </div>
+                            </div>
                         </div>
                     </div>
-                    <div>
-                        <h3 class="text-2xl font-bold mb-4">Alianzas Estratégicas para Escalar</h3>
-                        <p class="text-text-light mb-6">El crecimiento se acelerará mediante la integración con plataformas consolidadas, como la plataforma global de salud **ATIEMPO**, ofreciendo Cuidar+ como un servicio de valor añadido a su base de usuarios existente y expandiendo nuestro alcance internacional de forma rápida y eficiente.</p>
-                        <div class="stat-card p-4">
-                            <p class="font-bold">Cuidar+ <span class="text-2xl mx-2 text-secondary-teal">+</span> ATIEMPO</p>
-                            <p class="text-sm text-text-light">Sinergia para un Cuidado Global</p>
+                </div>
+            </div>
+        </section>
+
+        <section id="como-funciona" class="how-it-works-section section">
+            <div class="container">
+                <h2>Descubre Cuidar+ en Acción: Vídeos Demostrativos</h2>
+                <p class="subtitle">Observa cómo Cuidar+ transforma el día a día de tus mayores y simplifica tu rol de cuidador con nuestras demostraciones interactivas.</p>
+
+                <div class="video-grid">
+                    <div class="video-item">
+                        <h3>Interfaz del Mayor: Su Compañero en WhatsApp</h3>
+                        <div class="video-placeholder">
+                            <img src="image_2bb5dc.png" alt="Miniatura de vídeo demostrativo de la interfaz del mayor en WhatsApp." loading="lazy">
+                            <div class="play-button" aria-label="Reproducir vídeo de interfaz del mayor"><i class="fas fa-play-circle" aria-hidden="true"></i></div>
+                            <p class="coming-soon-overlay">VÍDEO PRÓXIMAMENTE</p>
+                        </div>
+                        <p class="video-description">Descubre cómo tu mayor interactúa de forma natural y sencilla con el asistente de Cuidar+ a través de llamadas, mensajes y notas de voz en WhatsApp.</p>
+                    </div>
+                    <div class="video-item">
+                        <h3>Portal Web del Cuidador: Tu Centro de Control y Tranquilidad</h3>
+                        <div class="video-placeholder">
+                            <img src="image_2baa5f.png" alt="Miniatura de vídeo demostrativo del portal web del cuidador." loading="lazy">
+                            <div class="play-button" aria-label="Reproducir vídeo del portal web del cuidador"><i class="fas fa-play-circle" aria-hidden="true"></i></div>
+                            <p class="coming-soon-overlay">VÍDEO PRÓXIMAMENTE</p>
+                        </div>
+                        <p class="video-description">Explora el dashboard de actividad, revisa el historial de conversaciones (audio y texto), gestiona recordatorios y configura alertas personalizadas, todo desde tu dispositivo.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="diferenciales" class="diferenciales-section section">
+            <div class="container">
+                <h2>¿Por Qué Cuidar+ es la Mejor Opción para Ti?</h2>
+                <p class="subtitle">Nuestras innovaciones tecnológicas y enfoque humano nos distinguen, ofreciéndote una tranquilidad sin precedentes y un cuidado excepcional.</p>
+                <div class="diferenciales-grid">
+                    <div class="diferencial-item">
+                        <div class="icon-wrapper">
+                            <i class="fas fa-user-friends" aria-hidden="true"></i>
+                        </div>
+                        <h3>Compañía Humana, Tecnología Inteligente</h3>
+                        <p>La capacidad de nuestro asistente de mantener <strong>conversaciones de voz fluidas y en tiempo real</strong> por WhatsApp (impulsado por Gemini) es única. Es como tener un compañero siempre disponible para tu mayor, pero con la discreción y eficiencia de la IA.</p>
+                    </div>
+                    <div class="diferencial-item">
+                        <div class="icon-wrapper">
+                            <i class="fas fa-smile" aria-hidden="true"></i>
+                        </div>
+                        <h3>Personalización que Crea Vínculos y Mayor Engagement</h3>
+                        <p>Tu ser querido puede elegir la "personalidad" de su asistente. Esta adaptación no solo mejora la experiencia del mayor, sino que fomenta un uso más frecuente y una conexión genuina, resultando en más tranquilidad para ti.</p>
+                    </div>
+                    <div class="diferencial-item">
+                        <div class="icon-wrapper">
+                            <i class="fas fa-lock" aria-hidden="true"></i>
+                        </div>
+                        <h3>Privacidad y Control Absoluto para Ti</h3>
+                        <p>Acceso total y transparente a las interacciones de tu mayor a través de un portal seguro, con la garantía de que todos los datos están cifrados y protegidos bajo las más estrictas normativas (GDPR y servidores AWS en Europa).</p>
+                    </div>
+                    <div class="diferencial-item">
+                        <div class="icon-wrapper">
+                            <i class="fas fa-lightbulb" aria-hidden="true"></i>
+                        </div>
+                        <h3>Innovación Contínua, Siempre un Paso Adelante</h3>
+                        <p>Estamos comprometidos con la evolución constante de Cuidar+, integrando nuevas funcionalidades y mejoras basadas en inteligencia artificial y el feedback de nuestros usuarios para ofrecer siempre el mejor servicio y la mayor tranquilidad.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="disclaimer" class="disclaimer-section section">
+            <div class="container">
+                <i class="fas fa-info-circle" aria-hidden="true"></i>
+                <h3>Información Importante: Cuidar+ NO es un Servicio Médico</h3>
+                <p>Cuidar+ es un asistente de compañía y supervisión para el bienestar general de las personas mayores. <strong>En ningún caso sustituye el diagnóstico, tratamiento o consejo de un profesional médico o sanitario cualificado.</strong> Su propósito es ofrecer tranquilidad al cuidador y compañía inteligente al mayor, facilitando el día a día.</p>
+                <p>Ante cualquier síntoma o emergencia médica, contacte siempre con los servicios de urgencia o un profesional de la salud.</p>
+            </div>
+        </section>
+
+        <section id="planes" class="planes-section section">
+            <div class="container">
+                <h2>Elige Tu Plan de Tranquilidad. ¡Aprovecha Nuestra Promoción Exclusiva!</h2>
+                <p class="subtitle">Sabemos lo importante que es tu tranquilidad. Por eso, te ofrecemos esta oportunidad única para experimentar Cuidar+.</p>
+
+                <div class="promo-banner">
+                    <h3>¡Oferta Especial por Tiempo Limitado!</h3>
+                    <p>Durante los <strong>primeros 3 meses</strong>: El <strong>Plan Esencial es GRATIS</strong> y los demás planes tienen un <strong>descuento especial</strong>.</p>
+                    <span>Una oportunidad perfecta para que tu mayor y tú valoréis todos los beneficios de Cuidar+.</span>
+                </div>
+
+                <div class="planes-grid">
+                    <div class="plan-card">
+                        <h3>Plan Esencial</h3>
+                        <div class="price-wrapper">
+                            <p class="promo-price">0€<span>/mes</span></p>
+                            <p class="original-price">Luego 4,95€/mes</p>
+                            <span class="promo-text">Primeros 3 meses GRATIS</span>
+                        </div>
+                        <ul>
+                            <li><i class="fas fa-comment" aria-hidden="true"></i> 10 min. de llamadas diarias con IA</li>
+                            <li><i class="fas fa-sms" aria-hidden="true"></i> Mensajes y notas de voz ilimitados</li>
+                            <li><i class="fas fa-brain" aria-hidden="true"></i> 1 ejercicio cognitivo diario</li>
+                            <li><i class="fas fa-smile" aria-hidden="true"></i> Detección de ánimo (no médica)</li>
+                            <li><i class="fas fa-euro-sign" aria-hidden="true"></i> 1€/servicio a domicilio contratado</li>
+                            <li><i class="fas fa-desktop" aria-hidden="true"></i> Portal Web del Cuidador <span>(acceso limitado)</span></li>
+                            <li><i class="fas fa-bell" aria-hidden="true"></i> Notificaciones y alertas <span>(limitadas)</span></li>
+                            <li><i class="fas fa-times" aria-hidden="true"></i> No incluye gestión de contactos y eventos</li>
+                        </ul>
+                        <a href="#contacto" class="btn btn-plan">Suscribirme al Esencial</a>
+                    </div>
+                    <div class="plan-card featured">
+                        <h3>Plan Tranquilidad</h3>
+                        <div class="price-wrapper">
+                            <p class="promo-price">4,95€<span>/mes</span></p>
+                            <p class="original-price">Luego 11,95€/mes</p>
+                            <span class="promo-text">Precio especial los 3 primeros meses</span>
+                        </div>
+                        <ul>
+                            <li><i class="fas fa-phone-alt" aria-hidden="true"></i> 30 min. de llamadas diarias con IA</li>
+                            <li><i class="fas fa-sms" aria-hidden="true"></i> Mensajes y notas de voz ilimitados</li>
+                            <li><i class="fas fa-brain" aria-hidden="true"></i> Ejercicios cognitivos ilimitados</li>
+                            <li><i class="fas fa-smile" aria-hidden="true"></i> Detección de ánimo (no médica)</li>
+                            <li><i class="fas fa-check" aria-hidden="true"></i> <strong>Sin coste</strong> por servicio a domicilio</li>
+                            <li><i class="fas fa-desktop" aria-hidden="true"></i> Portal Web del Cuidador (completo)</li>
+                            <li><i class="fas fa-bell" aria-hidden="true"></i> Recordatorios y alertas ilimitadas</li>
+                            <li><i class="fas fa-calendar-check" aria-hidden="true"></i> Gestión de contactos y eventos</li>
+                        </ul>
+                        <a href="#contacto" class="btn btn-plan btn-featured">Quiero Más Tranquilidad</a>
+                    </div>
+                    <div class="plan-card">
+                        <h3>Plan Tranquilidad Total</h3>
+                        <div class="price-wrapper">
+                            <p class="promo-price">14,95€<span>/mes</span></p>
+                            <p class="original-price">Luego 24,95€/mes</p>
+                            <span class="promo-text">Precio especial los 3 primeros meses</span>
+                        </div>
+                        <ul>
+                            <li><i class="fas fa-phone-volume" aria-hidden="true"></i> 60 min. de llamadas diarias con IA</li>
+                            <li><i class="fas fa-sms" aria-hidden="true"></i> Mensajes y notas de voz ilimitados</li>
+                            <li><i class="fas fa-brain" aria-hidden="true"></i> Ejercicios cognitivos ilimitados</li>
+                            <li><i class="fas fa-smile" aria-hidden="true"></i> Detección de ánimo (no médica)</li>
+                            <li><i class="fas fa-check" aria-hidden="true"></i> <strong>Sin coste</strong> por servicio a domicilio</li>
+                            <li><i class="fas fa-laptop-code" aria-hidden="true"></i> Portal Web Cuidador (avanzado)</li>
+                            <li><i class="fas fa-users" aria-hidden="true"></i> Cuidadores ilimitados</li>
+                            <li><i class="fas fa-palette" aria-hidden="true"></i> Dashboards personalizables</li>
+                            <li><i class="fas fa-calendar-check" aria-hidden="true"></i> Gestión de contactos y eventos</li>
+                        </ul>
+                        <a href="#contacto" class="btn btn-plan">Tranquilidad Absoluta</a>
+                    </div>
+                </div>
+                <p class="planes-note">Después de los 3 meses de promoción, se aplicará el precio regular del plan elegido. Promoción válida solo para nuevas suscripciones.</p>
+            </div>
+        </section>
+
+        <section id="partners" class="partners-section section">
+            <div class="container">
+                <h2>Nuestros Aliados Estratégicos</h2>
+                <p class="subtitle">Trabajamos con los mejores para garantizar la calidad y la seguridad en cada servicio y desarrollo. Juntos, hacemos posible Cuidar+.</p>
+                <div class="partners-grid">
+                    <img src="image_2bad86.png" alt="Logo de Google" loading="lazy">
+                    <img src="image_2c34c2.png" alt="Logo de AWS" loading="lazy">
+                    <img src="image_377b2e.png" alt="Logo de WhatsApp" loading="lazy">
+                    <img src="image_377825.jpg" alt="Logo de un partner tecnológico genérico" loading="lazy">
+                </div>
+                <p class="partners-note">¿Interesado en formar parte de nuestra red de colaboradores? Contáctanos para explorar sinergias.</p>
+            </div>
+        </section>
+
+        <section id="testimonios" class="testimonios-section section">
+            <div class="container">
+                <h2>Lo Que Dicen Otros Cuidador@s Como Tú</h2>
+                <div class="static-testimonios-grid">
+                    <div class="testimonio-card">
+                        <img src="avatar_ana_g.jpg" alt="Foto de perfil de Ana G., cuidadora de su padre." class="testimonio-avatar" loading="lazy">
+                        <div class="testimonio-content">
+                            <p class="quote">"Desde que mi padre usa Cuidar+, mi nivel de estrés ha bajado muchísimo. Saber que tiene compañía y que estoy al tanto de su estado me da una paz que no tiene precio."</p>
+                            <p class="author">- Ana G. - Cuidadora de su Padre</p>
                         </div>
                     </div>
-                </div>
-                
-                <!-- Demo de Integración -->
-                <div class="mt-16">
-                     <h3 class="text-2xl font-bold text-center mb-8">Demo: Gestión de un Servicio Urgente</h3>
-                     <div id="integration-demo-container" class="bg-gray-800 p-6 rounded-lg shadow-xl text-white font-mono text-sm relative">
-                        <div id="integration-steps"></div>
-                        <button id="replay-integration-demo" class="absolute bottom-4 right-4 bg-secondary-teal text-white font-bold py-1 px-3 rounded-full text-xs hover:bg-teal-600 transition-colors">▶️ Repetir</button>
-                     </div>
-                </div>
+                    <div class="testimonio-card">
+                        <img src="avatar_javier_r.jpg" alt="Foto de perfil de Javier R., cuidador de su madre." class="testimonio-avatar" loading="lazy">
+                        <div class="testimonio-content">
+                            <p class="quote">"Las llamadas de WhatsApp son increíbles. Mi madre se siente acompañada y yo recibo las alertas necesarias. Es como tener un ángel de la guarda."</p>
+                            <p class="author">- Javier R. - Cuidador de su Madre</p>
+                        </div>
+                    </div>
+                    <div class="testimonio-card">
+                        <img src="avatar_marta_p.jpg" alt="Foto de perfil de Marta P., cuidadora de su abuela." class="testimonio-avatar" loading="lazy">
+                        <div class="testimonio-content">
+                            <p class="quote">"La transparencia del portal web es fundamental. Puedo ver cómo está mi abuela sin sentir que la estoy invadiendo. Cuidar+ ha transformado nuestra dinámica familiar."</p>
+                            <p class="author">- Marta P. - Cuidadora de su Abuela</p>
+                        </div>
+                    </div>
+                    </div>
             </div>
         </section>
 
-        <!-- Equipo -->
-        <section id="equipo" class="py-20 section-fade-in">
-             <div class="container mx-auto px-6 text-center">
-                <h2 class="text-3xl md:text-4xl font-bold mb-4">Nuestro Equipo Fundador</h2>
-                <p class="text-lg text-text-light max-w-3xl mx-auto mb-12">Un equipo multidisciplinar con una visión compartida, estructurado para la agilidad y el alto rendimiento.</p>
-                <div class="max-w-4xl mx-auto">
-                    <div class="relative flex justify-center items-center mb-8"><div class="stat-card p-4 w-48"><h4 class="font-bold">Manuel Peña</h4><p class="text-sm text-primary-blue">General Manager</p></div></div>
-                     <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-                        <div class="space-y-6"><div class="stat-card p-3"><h4 class="font-semibold">Pedro Fernández</h4><p class="text-sm text-text-light">Finance Director</p></div><div class="stat-card p-3"><h4 class="font-semibold">Ludovica Zara</h4><p class="text-sm text-text-light">Sales Director</p></div></div>
-                        <div class="space-y-6"><div class="stat-card p-3"><h4 class="font-semibold">Jaime de la Serna</h4><p class="text-sm text-text-light">Product Development</p></div><div class="stat-card p-3"><h4 class="font-semibold">Juan Carlos Escotet</h4><p class="text-sm text-text-light">Technology Director</p></div></div>
-                        <div class="space-y-6"><div class="stat-card p-3"><h4 class="font-semibold">Lorena Alonso</h4><p class="text-sm text-text-light">Market Intelligence</p></div><div class="stat-card p-3"><h4 class="font-semibold">Alejandro Rodríguez</h4><p class="text-sm text-text-light">Operations Director</p></div></div>
+        <section id="faqs" class="faqs-section section">
+            <div class="container">
+                <h2>Preguntas Frecuentes</h2>
+                <div class="faq-item">
+                    <h3 class="faq-question" id="faq-q1" role="button" aria-expanded="false" aria-controls="faq-a1">¿Necesito que mi mayor tenga un smartphone avanzado para usar Cuidar+? <i class="fas fa-chevron-down" aria-hidden="true"></i></h3>
+                    <div class="faq-answer" id="faq-a1" role="region" aria-labelledby="faq-q1">
+                        <p>No, solo necesita un smartphone con WhatsApp instalado y conexión a internet. Cuidar+ está diseñado para funcionar de manera sencilla en la plataforma que ya conoce y utiliza, haciendo la tecnología accesible para todos y eliminando barreras de uso.</p>
                     </div>
                 </div>
-             </div>
-        </section>
-
-        <!-- Roadmap -->
-        <section id="roadmap" class="py-20 bg-white section-fade-in">
-             <div class="container mx-auto px-6">
-                <h2 class="text-3xl md:text-4xl font-bold text-center mb-12">Nuestro Camino Hacia el Futuro</h2>
-                <div class="max-w-2xl mx-auto"><div class="relative border-l-2 border-secondary-teal pl-8 space-y-12"><div class="timeline-item"><h4 class="font-bold text-lg">Q3 2025: Cierre Ronda Seed & MVP</h4><p class="text-text-light">Asegurar financiación inicial de 150.000€ y finalizar el desarrollo del Producto Mínimo Viable.</p></div><div class="timeline-item"><h4 class="font-bold text-lg">Q4 2025: Programa Piloto</h4><p class="text-text-light">Validar la propuesta de valor con 50 familias en un piloto controlado.</p></div><div class="timeline-item"><h4 class="font-bold text-lg">Q1 2026: Lanzamiento Oficial</h4><p class="text-text-light">Lanzamiento en Madrid y consecución de los primeros 500 usuarios.</p></div><div class="timeline-item"><h4 class="font-bold text-lg">2027: Expansión y Alianzas</h4><p class="text-text-light">Escalado nacional, cierre del primer acuerdo B2B con una aseguradora y preparación para la internacionalización.</p></div></div></div>
+                <div class="faq-item">
+                    <h3 class="faq-question" id="faq-q2" role="button" aria-expanded="false" aria-controls="faq-a2">¿Cómo se garantiza la privacidad y seguridad de los datos? <i class="fas fa-chevron-down" aria-hidden="true"></i></h3>
+                    <div class="faq-answer" id="faq-a2" role="region" aria-labelledby="faq-q2">
+                        <p>La privacidad es nuestra máxima prioridad. Todas las conversaciones están cifradas y se almacenan de forma segura en servidores AWS ubicados en Europa, cumpliendo estrictamente con el GDPR y la legislación española de protección de datos. Además, siempre se solicita el consentimiento explícito del mayor para la grabación de sus interacciones, garantizando total transparencia y control.</p>
+                    </div>
+                </div>
+                <div class="faq-item">
+                    <h3 class="faq-question" id="faq-q3" role="button" aria-expanded="false" aria-controls="faq-a3">¿Cuidar+ reemplaza la atención médica o a un cuidador físico? <i class="fas fa-chevron-down" aria-hidden="true"></i></h3>
+                    <div class="faq-answer" id="faq-a3" role="region" aria-labelledby="faq-q3">
+                        <p>Absolutamente no. Cuidar+ es un asistente de compañía y supervisión de bienestar con un enfoque <strong>NO MÉDICO</strong>. Complementa y facilita la vida de tu mayor y tu tranquilidad, pero bajo ninguna circunstancia sustituye el diagnóstico, tratamiento o consejo de un profesional médico o la presencia de un cuidador físico. Nuestro objetivo es ofrecer un apoyo inteligente y empático, no servicios de salud.</p>
+                    </div>
+                </div>
+                <div class="faq-item">
+                    <h3 class="faq-question" id="faq-q4" role="button" aria-expanded="false" aria-controls="faq-a4">¿Cómo funciona la promoción de los primeros 3 meses? <i class="fas fa-chevron-down" aria-hidden="true"></i></h3>
+                    <div class="faq-answer" id="faq-a4" role="region" aria-labelledby="faq-q4">
+                        <p>Durante los primeros 3 meses de tu suscripción, el Plan Esencial será completamente gratuito. Para los planes Tranquilidad y Tranquilidad Total, disfrutarás de un precio especial reducido durante ese mismo periodo inicial. Una vez finalizados los 3 meses, tu suscripción pasará automáticamente a la tarifa regular del plan elegido. ¡Es la oportunidad perfecta para que tú y tu mayor descubráis todos los beneficios de Cuidar+ sin compromiso inicial!</p>
+                    </div>
+                </div>
+                 <div class="faq-item">
+                    <h3 class="faq-question" id="faq-q5" role="button" aria-expanded="false" aria-controls="faq-a5">¿Quién y cómo se gestionan los servicios a domicilio? <i class="fas fa-chevron-down" aria-hidden="true"></i></h3>
+                    <div class="faq-answer" id="faq-a5" role="region" aria-labelledby="faq-q5">
+                        <p>Tu mayor puede solicitar un servicio a domicilio directamente al asistente de WhatsApp (ej. un taxi). Tú, como cuidador, recibirás una notificación en tu portal web para aprobar la solicitud y gestionar el pago de forma sencilla y segura desde cualquier lugar. En el Plan Esencial, se aplica un coste de 1€ por servicio; en los planes Tranquilidad y Tranquilidad Total, la gestión de los servicios a domicilio no tiene coste adicional, ofreciéndote total previsibilidad en tus gastos.</p>
+                    </div>
+                </div>
             </div>
         </section>
-        
-        <!-- Contacto -->
-        <section id="contacto" class="py-20 section-fade-in">
-             <div class="container mx-auto px-6">
-                <div class="max-w-xl mx-auto text-center"><h2 class="text-3xl font-bold mb-4">Hablemos sobre el futuro del cuidado</h2><p class="text-lg text-text-light mb-8">Déjanos tus datos y nos pondremos en contacto contigo en breve.</p></div>
-                <div id="contact-form-container" class="max-w-xl mx-auto bg-white p-8 rounded-lg shadow-lg"><form id="contact-form"><div class="grid sm:grid-cols-2 gap-6"><div><label for="nombre" class="block text-sm font-medium text-text-dark mb-1">Nombre</label><input type="text" id="nombre" name="nombre" required class="form-input"></div><div><label for="telefono" class="block text-sm font-medium text-text-dark mb-1">Teléfono</label><input type="tel" id="telefono" name="telefono" required class="form-input"></div><div class="sm:col-span-2"><label for="email" class="block text-sm font-medium text-text-dark mb-1">Email</label><input type="email" id="email" name="email" required class="form-input"></div><div class="sm:col-span-2"><label for="edad" class="block text-sm font-medium text-text-dark mb-1">Edad del familiar (opcional)</label><input type="number" id="edad" name="edad" class="form-input"></div></div><div class="mt-8 text-center"><button type="submit" class="bg-primary-blue text-white font-bold py-3 px-8 rounded-full text-lg hover:bg-blue-800 transition-colors w-full">Solicitar Información</button></div></form></div>
-             </div>
+
+        <section id="cta-final" class="cta-final-section section">
+            <div class="container">
+                <h2>¿Listo para Disfrutar de la Tranquilidad que Mereces?</h2>
+                <p>Miles de cuidadores ya han transformado su día a día y el bienestar de sus seres queridos con Cuidar+. ¡Es tu momento de unirte a ellos y experimentar la diferencia!</p>
+                <a href="#planes" class="btn btn-hero">¡Quiero Mi Promoción Ahora!</a>
+            </div>
         </section>
+
     </main>
-    
-    <script>
-    document.addEventListener('DOMContentLoaded', () => {
-        const observer = new IntersectionObserver(entries => {
-            entries.forEach(entry => {
-                if (entry.isIntersecting) entry.target.classList.add('visible');
-            });
-        }, { threshold: 0.1 });
-        document.querySelectorAll('.section-fade-in').forEach(section => observer.observe(section));
 
-        // Animated WhatsApp Demo
-        const chatArea = document.getElementById('chat-area');
-        const statusText = document.getElementById('status-text');
-        const replayDemoButton = document.getElementById('replay-demo');
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-logo">
+                    <img src="Logo.jpg" alt="Logo Cuidar+">
+                    <p>Tu aliado para el cuidado inteligente y empático de tus mayores.</p>
+                </div>
+                <div class="footer-links">
+                    <h4>Navegación</h4>
+                    <ul>
+                        <li><a href="#beneficios-detalle">Beneficios y Funcionalidades</a></li>
+                        <li><a href="#como-funciona">Cómo Funciona</a></li>
+                        <li><a href="#diferenciales">Nuestra Diferencia</a></li>
+                        <li><a href="#planes">Planes y Promoción</a></li>
+                        <li><a href="#partners">Partners</a></li>
+                        <li><a href="#faqs">FAQs</a></li>
+                    </ul>
+                </div>
+                <div class="footer-contact">
+                    <h4>Contacto</h4>
+                    <p><i class="fas fa-envelope" aria-hidden="true"></i> info@cuidarmas.com</p>
+                    <p><i class="fas fa-phone" aria-hidden="true"></i> +34 912 345 678</p>
+                    <p><i class="fas fa-map-marker-alt" aria-hidden="true"></i> C/ Mayor, 123, Madrid, España</p>
+                </div>
+                <div class="footer-social">
+                    <h4>Síguenos</h4>
+                    <a href="#" target="_blank" aria-label="Facebook"><i class="fab fa-facebook-f" aria-hidden="true"></i></a>
+                    <a href="#" target="_blank" aria-label="Twitter"><i class="fab fa-twitter" aria-hidden="true"></i></a>
+                    <a href="#" target="_blank" aria-label="LinkedIn"><i class="fab fa-linkedin-in" aria-hidden="true"></i></a>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>© <span id="current-year"></span> Cuidar+. Todos los derechos reservados.</p>
+                <p><a href="#">Política de Privacidad</a> | <a href="#">Términos de Servicio</a> | <a href="#">Aviso Legal</a></p>
+            </div>
+        </div>
+    </footer>
 
-        const demoMessages = [
-            { from: 'in', text: '¡Buenos días, Consuelo! 😊 Espero que hayas descansado bien. Solo para recordarte que a las 10:00 tienes la pastilla para la tensión.' },
-            { from: 'out', text: 'Vale, gracias hijo. Ahora mismo me la tomo.' },
-            { from: 'in', text: '¡Genial! Me quedo más tranquilo. ¿Te apetece que escuchemos un poco de tu música favorita?' }
-        ];
-        
-        function createMessageBubble(msg) {
-            const bubble = document.createElement('div');
-            bubble.className = `message-bubble message-${msg.from}`;
-            bubble.innerHTML = `<p class="text-sm">${msg.text}</p>`;
-            return bubble;
-        }
-
-        function createTypingIndicator() {
-            const indicator = document.createElement('div');
-            indicator.className = 'message-bubble message-in typing-indicator';
-            indicator.innerHTML = `<span></span><span></span><span></span>`;
-            return indicator;
-        }
-
-        async function runDemo() {
-            chatArea.innerHTML = '';
-            for (let i = 0; i < demoMessages.length; i++) {
-                const msg = demoMessages[i];
-                if (msg.from === 'in') {
-                    statusText.textContent = 'Cuidar+ está escribiendo...';
-                    const indicator = createTypingIndicator();
-                    chatArea.appendChild(indicator);
-                    chatArea.scrollTop = chatArea.scrollHeight;
-                    await new Promise(resolve => setTimeout(resolve, 1500));
-                    chatArea.removeChild(indicator);
-                }
-                statusText.textContent = 'en línea';
-                const bubble = createMessageBubble(msg);
-                chatArea.appendChild(bubble);
-                chatArea.scrollTop = chatArea.scrollHeight;
-                await new Promise(resolve => setTimeout(resolve, msg.from === 'out' ? 1000 : 2000));
-            }
-        }
-        replayDemoButton.addEventListener('click', runDemo);
-        runDemo();
-
-        // Animated Dashboard
-        const alertsContainer = document.getElementById('alerts-container');
-        const wellbeingEmoji = document.getElementById('wellbeing-emoji');
-        const wellbeingText = document.getElementById('wellbeing-text');
-        
-        const alerts = [
-            { type: 'info', text: 'Medicación de las 10:00 confirmada.', border: 'var(--positive-green-border)' },
-            { type: 'warning', text: 'Tono nostálgico detectado a las 18:32.', border: 'var(--alert-yellow-border)'},
-            { type: 'urgent', text: '<strong>URGENTE:</strong> Detectada posible fuga de agua. Gestionando servicio.', border: 'var(--danger-red-border)'}
-        ];
-
-        async function runDashboardAnimation() {
-            alertsContainer.innerHTML = '<p id="no-alerts" class="text-xs text-center text-text-light py-4">Monitorizando actividad...</p>';
-            await new Promise(r => setTimeout(r, 2000));
-
-            for (let i = 0; i < alerts.length; i++) {
-                 document.getElementById('no-alerts')?.remove();
-                const alert = alerts[i];
-                const alertDiv = document.createElement('div');
-                alertDiv.className = 'alert-item p-3 rounded-lg border-l-4';
-                alertDiv.style.borderColor = alert.border;
-                alertDiv.innerHTML = `<p class="font-semibold text-sm">${alert.text}</p>`;
-                alertsContainer.prepend(alertDiv);
-                
-                await new Promise(r => setTimeout(r, 100));
-                alertDiv.classList.add('visible');
-
-                if (alert.type === 'urgent') {
-                    wellbeingEmoji.textContent = '😟';
-                    wellbeingEmoji.style.transform = 'scale(1.2)';
-                    wellbeingText.textContent = 'Atención Requerida';
-                    wellbeingText.classList.add('text-red-800');
-                }
-                
-                await new Promise(r => setTimeout(r, 3000));
-            }
-        }
-        runDashboardAnimation();
-
-        // Integration Demo
-        const integrationContainer = document.getElementById('integration-steps');
-        const replayIntegrationBtn = document.getElementById('replay-integration-demo');
-
-        const integrationSteps = [
-            `<strong>1. Detección (WhatsApp):</strong> Consuelo envía una nota de voz: "¡Ay, se ha roto una tubería en el baño y está saliendo agua!"`,
-            `<strong>2. Interpretación (IA Cuidar+):</strong> El LLM detecta la intención de "avería doméstica" y la entidad "fuga de agua".`,
-            `<strong>3. Orquestación (Backend):</strong> Cuidar+ busca en su red de proveedores y se conecta a la API de 'Homeserve'.`,
-            `<strong>4. Notificación (Portal Cuidador):</strong> Javier recibe una alerta urgente en su dashboard: "⚠️ Fuga de agua detectada. Solicitud de fontanero en curso."`,
-            `<strong>5. Acción y Confirmación:</strong> Cuidar+ envía a Javier: "✅ Homeserve puede enviar un técnico en 60 mins. ¿Autorizas el servicio?"`
-        ];
-
-        async function runIntegrationDemo() {
-            integrationContainer.innerHTML = '';
-            for(let i = 0; i < integrationSteps.length; i++) {
-                const stepEl = document.createElement('div');
-                stepEl.className = 'p-2 my-1 rounded transition-opacity duration-500 opacity-0';
-                stepEl.innerHTML = integrationSteps[i];
-                integrationContainer.appendChild(stepEl);
-                await new Promise(r => setTimeout(r, 100));
-                stepEl.style.opacity = '1';
-                await new Promise(r => setTimeout(r, 2500));
-            }
-        }
-        replayIntegrationBtn.addEventListener('click', runIntegrationDemo);
-        runIntegrationDemo();
-
-
-        // Chart.js
-        const chartTooltipConfig = { plugins: { tooltip: { callbacks: { title: (items) => Array.isArray(items[0].label) ? items[0].label.join(' ') : items[0].label } } } };
-        const commonChartOptions = { responsive: true, maintainAspectRatio: false, plugins: { ...chartTooltipConfig.plugins, legend: { display: false } }, scales: { x: { grid: { display: false } }, y: { grid: { color: '#eef' } } } };
-        
-        new Chart(document.getElementById('medicationChart').getContext('2d'), { type: 'bar', data: { labels: ['Lun', 'Mar', 'Mié', 'Jue', 'Vie', 'Sáb', 'Dom'], datasets: [{ label: 'Tomas', data: [2, 2, 1, 2, 2, 2, 1], backgroundColor: 'rgba(0, 169, 157, 0.6)', borderRadius: 4 }] }, options: { ...commonChartOptions, scales: { ...commonChartOptions.scales, y: { beginAtZero: true, max: 2, ticks: { stepSize: 1 } } } } });
-        new Chart(document.getElementById('sentimentChart').getContext('2d'), { type: 'line', data: { labels: ['Lun', 'Mar', 'Mié', 'Jue', 'Vie', 'Sáb', 'Dom'], datasets: [{ label: 'Sentimiento', data: [8, 8.5, 7, 7.5, 9, 6.5, 8], fill: true, borderColor: 'rgba(0, 90, 156, 1)', backgroundColor: 'rgba(0, 90, 156, 0.1)', tension: 0.4 }] }, options: { ...commonChartOptions, scales: { ...commonChartOptions.scales, y: { min: 0, max: 10 } } } });
-
-        // Contact Form
-        const contactFormContainer = document.getElementById('contact-form-container');
-        document.getElementById('contact-form').addEventListener('submit', (e) => {
-            e.preventDefault();
-            contactFormContainer.innerHTML = `<div class="text-center p-8"><h3 class="text-2xl font-bold text-secondary-teal mb-4">¡Gracias!</h3><p class="text-text-light">Hemos recibido tus datos. Nos pondremos en contacto contigo en breve.</p></div>`;
-        });
-    });
-    </script>
-
+    <script src="script.js"></script>
 </body>
 </html>
